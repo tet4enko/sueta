@@ -1,0 +1,2 @@
+export const TRAFFIC_LIGHT_HIDE_ANIMATION_DELAY = 1000;
+export const LOCATION_RADIUS = 0.052;
