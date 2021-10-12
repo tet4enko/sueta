@@ -4,20 +4,16 @@ import React, {
 } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-    View, StyleSheet, ActivityIndicator, Image,
+    View, StyleSheet, ActivityIndicator,
 } from 'react-native';
-import MapView, { Marker, Callout } from 'react-native-maps';
-import MapViewDirections from 'react-native-maps-directions';
 
 import THEME from '../theme';
-import EventModalize from '../components/EventModalize';
-import EventMarkers from '../components/EventMarkers';
-
+import { EventsMap } from '../entities/events/components';
+import { EventCard } from '../entities/event/components';
 import { loadLocation, updateLocation } from '../store/actions/location';
-import {
-    loadEvents, showEvent, hideEvent, setEventNavData,
-} from '../store/actions/events';
-import { getLocation, getEvents, getCurrentEventMeta } from '../store/selectors';
+import { getLocation } from '../store/selectors';
+import { eventsSelectors, eventsActions } from '../entities/events/store';
+import { eventSelectors, eventActions } from '../entities/event/store';
 import { calculateInitialRegion } from '../helpers/location';
 
 const EventsScreen = ({ navigation }) => {
@@ -29,20 +25,19 @@ const EventsScreen = ({ navigation }) => {
     } = useSelector(getLocation);
     const {
         events,
-        eventId,
         isLoading: isEventsLoading,
         isLoaded: isEventsLoaded,
-    } = useSelector(getEvents);
-    const eventMeta = useSelector(getCurrentEventMeta);
+    } = useSelector(eventsSelectors.getEvents);
+    const eventId = useSelector(eventSelectors.getCurrentEventId);
+    const eventMeta = useSelector(eventSelectors.getCurrentEventMeta);
 
     const [initialRegion, setInitialRegion] = useState(null);
 
     const modalizeRef = useRef(null);
-    const mapRef = useRef(null);
 
     useEffect(() => {
         dispatch(loadLocation());
-        dispatch(loadEvents());
+        dispatch(eventsActions.loadEvents());
     }, []);
 
     useEffect(() => {
@@ -85,74 +80,18 @@ const EventsScreen = ({ navigation }) => {
         );
     }
 
-    let markers = events.map((item, index) => (
-        <Marker
-            key={index}
-            coordinate={{ latitude: item.startLatitude, longitude: item.startLongitude }}
-            onPress={() => dispatch(showEvent(item.id))}
-        >
-            <Image
-                // eslint-disable-next-line global-require
-                source={require('../../assets/start.png')}
-                style={{ width: 32, height: 32 }}
-                resizeMode="contain"
-            />
-            <Callout tooltip />
-        </Marker>
-    ));
-    let route = null;
-
-    if (eventId) {
-        markers = <EventMarkers event={eventMeta} />;
-        route = (
-            <MapViewDirections
-                origin={{ latitude: eventMeta.startLatitude, longitude: eventMeta.startLongitude }}
-                destination={{ latitude: eventMeta.finishLatitude, longitude: eventMeta.finishLongitude }}
-                apikey="AIzaSyBQjy78ZlFHuPdJFY9wiiNDhuJJlwNgmiQ"
-                strokeWidth={3}
-                strokeColor="green"
-                optimizeWaypoints
-                onReady={(result) => {
-                    setEventNavData({
-                        distance: result.distance,
-                        duration: result.duration,
-                    });
-
-                    mapRef.current?.fitToCoordinates(result.coordinates, {
-                        edgePadding: {
-                            top: 70,
-                            bottom: 500,
-                        },
-                    });
-                }}
-            />
-        );
-    }
-
     return (
         (
             <View style={styles.center}>
-                <MapView
-                    ref={mapRef}
-                    style={styles.map}
-                    provider="google"
-                    initialRegion={{
-                        latitude: initialRegion ? initialRegion.latitude : location.latitude,
-                        longitude: initialRegion ? initialRegion.longitude : location.longitude,
-                        latitudeDelta: initialRegion ? initialRegion.latitudeDelta : 0.0922,
-                        longitudeDelta: initialRegion ? initialRegion.longitudeDelta : 0.0421,
-                    }}
-                    showsUserLocation
-                    showsMyLocationButton
-                    showsIndoors={false}
+                <EventsMap
+                    initialRegion={initialRegion}
                     onUserLocationChange={handleOnUserLocationChange}
-                >
-                    {markers}
-                    {route}
-                </MapView>
-                <EventModalize
+                    onEventNavDataReady={eventActions.setEventNavData}
+                    onEventPress={(id) => dispatch(eventActions.showEvent(id))}
+                />
+                <EventCard
                     ref={modalizeRef}
-                    onClosed={() => dispatch(hideEvent())}
+                    onClosed={() => dispatch(eventActions.hideEvent())}
                     onPressBack={() => modalizeRef.current?.close()}
                     onPressStart={() => {
                         navigation.navigate('Event', { name: eventMeta.name });
@@ -171,9 +110,5 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
-    },
-    map: {
-        width: '100%',
-        height: '100%',
     },
 });

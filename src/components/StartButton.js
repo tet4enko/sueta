@@ -9,14 +9,15 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { AppButton } from './ui/AppButton';
 import { AppText } from './ui/AppText';
 
-import { getLocation, getCurrentEventMeta } from '../store/selectors';
+import { getLocation } from '../store/selectors';
+import { eventSelectors } from '../entities/event/store';
 import { calcCrow } from '../helpers/location';
 
 import { LOCATION_RADIUS } from '../constants';
 
 const StartButton = ({ style, onPress, startText = 'Перейти в событие!' }) => {
     const { location } = useSelector(getLocation);
-    const eventMeta = useSelector(getCurrentEventMeta);
+    const eventMeta = useSelector(eventSelectors.getCurrentEventMeta);
 
     const [distance, setDistance] = useState(
         calcCrow(location.latitude, location.longitude, eventMeta.startLatitude, eventMeta.startLongitude),

@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-    View, StyleSheet, Dimensions, Animated, Alert,
+    View, StyleSheet, Dimensions, Animated,
 } from 'react-native';
 import MapView from 'react-native-maps';
 import { useTheme } from '@react-navigation/native';
@@ -11,17 +11,18 @@ import InsetShadow from 'react-native-inset-shadow';
 
 import Stopwatch from '../components/ui/Stopwatch';
 import NavigateButton from '../components/NavigateButton';
-import EventMarkers from '../components/EventMarkers';
+// import { EventMarkers } from '../entities/map/components';
 import RaceModalize from '../components/RaceModalize';
 import {
     getLocation,
-    getCurrentEventMeta,
     getTrafficLightVisibility,
     getTrafficLightColor,
     getStartTime,
     getFinishTime,
     getRaceCurrentRaceCard,
 } from '../store/selectors';
+
+import { eventSelectors } from '../entities/event/store';
 
 import {
     startRace, hideTrafficLight, resetRace, checkIsFinish,
@@ -38,7 +39,7 @@ const EventScreen = ({ navigation }) => {
     const dispatch = useDispatch();
     const { colors } = useTheme();
     const { location } = useSelector(getLocation);
-    const eventMeta = useSelector(getCurrentEventMeta);
+    const eventMeta = useSelector(eventSelectors.getCurrentEventMeta);
     const isTrafficLightVisible = useSelector(getTrafficLightVisibility);
     const trafficLightColor = useSelector(getTrafficLightColor);
     const startTime = useSelector(getStartTime);
@@ -138,7 +139,7 @@ const EventScreen = ({ navigation }) => {
         >
             <View style={styles.center}>
                 <MapView {...mapViewProps}>
-                    <EventMarkers event={eventMeta} />
+                    {/* <EventMarkers event={eventMeta} /> */}
                 </MapView>
                 {!finishTime && (
                     <View style={{ ...styles.button, ...styles.cancelButton }}>

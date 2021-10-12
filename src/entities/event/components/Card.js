@@ -12,37 +12,35 @@ import {
 } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { AntDesign, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
-import { AppTextBold } from './ui/AppTextBold';
-import { AppText } from './ui/AppText';
-import { AppButton } from './ui/AppButton';
-import NavigateButton from './NavigateButton';
-import StartButton from './StartButton';
+import { AppTextBold } from '../../../components/ui/AppTextBold';
+import { AppText } from '../../../components/ui/AppText';
+import { AppButton } from '../../../components/ui/AppButton';
+import NavigateButton from '../../../components/NavigateButton';
+import StartButton from '../../../components/StartButton';
 
 import {
-    getCurrentEventMeta,
-    getCurrentEventNavData,
-    getCurrentEventTopThreeRaces,
-    getCurrentEventUserStats,
     getUserById,
-} from '../store/selectors';
+} from '../../../store/selectors';
 
-import Touchable from './ui/Touchable';
+import { eventSelectors } from '../store';
 
-import { getUserProfile } from '../store/actions/user';
+import Touchable from '../../../components/ui/Touchable';
+
+import { getUserProfile } from '../../../store/actions/user';
 
 const noUserAvatar = 'https://img2.freepng.ru/20180412/owe/kisspng-female-silhouette-clip-art-user-avatar-5acfd8e84206c7.3975166315235709202705.jpg';
 
-const EventModalize = forwardRef(({
+export const Card = forwardRef(({
     onClosed,
     onPressBack, onPressStart,
 }, ref) => {
     const dispatch = useDispatch();
     const { colors } = useTheme();
 
-    const meta = useSelector(getCurrentEventMeta);
-    const navData = useSelector(getCurrentEventNavData);
-    const topThreeRaces = useSelector(getCurrentEventTopThreeRaces);
-    const userStats = useSelector(getCurrentEventUserStats);
+    const meta = useSelector(eventSelectors.getCurrentEventMeta);
+    const navData = useSelector(eventSelectors.getCurrentEventNavData);
+    const topThreeRaces = useSelector(eventSelectors.getCurrentEventTopThreeRaces);
+    const userStats = useSelector(eventSelectors.getCurrentEventUserStats);
     const top1User = useSelector(getUserById(topThreeRaces && topThreeRaces[0] && topThreeRaces[0].user));
     const top2User = useSelector(getUserById(topThreeRaces && topThreeRaces[1] && topThreeRaces[1].user));
     const top3User = useSelector(getUserById(topThreeRaces && topThreeRaces[2] && topThreeRaces[2].user));
@@ -201,8 +199,6 @@ const EventModalize = forwardRef(({
         </Modalize>
     );
 });
-
-export default EventModalize;
 
 const styles = StyleSheet.create({
     wrap: {

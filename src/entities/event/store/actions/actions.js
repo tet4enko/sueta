@@ -1,23 +1,11 @@
 import {
-    GET_EVENTS_START,
-    GET_EVENTS_SUCCESS,
     SET_EVENT,
     UNSET_EVENT,
     SET_EVENT_RACES,
     SET_EVENT_NAV_DATA,
 } from '../types';
-import { getEvents, getEventRaces } from '../../helpers/firebase';
 
-export const loadEvents = () => async (dispatch) => {
-    dispatch({ type: GET_EVENTS_START });
-
-    const events = await getEvents();
-
-    dispatch({
-        type: GET_EVENTS_SUCCESS,
-        payload: { events },
-    });
-};
+import { getEventRaces } from '../../../../helpers/firebase';
 
 export const setEventNavData = (data) => async (dispatch) => {
     dispatch({ type: SET_EVENT_NAV_DATA, payload: data });
