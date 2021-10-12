@@ -2,7 +2,7 @@ import React from 'react';
 import { Marker, Callout } from 'react-native-maps';
 import { Image } from 'react-native';
 
-import { MARKER_SIZE } from '../../../shared/constants';
+const MARKER_SIZE = 32;
 
 export const Markers = ({ event, events, onEventPress }) => (
     event ? (

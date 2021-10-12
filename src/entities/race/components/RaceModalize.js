@@ -11,11 +11,11 @@ import {
 
 import prettyMilliseconds from 'pretty-ms';
 
-import { AppTextBold } from './ui/AppTextBold';
-import { AppText } from './ui/AppText';
-import { AppButton } from './ui/AppButton';
+import { AppTextBold } from '../../../components/ui/AppTextBold';
+import { AppText } from '../../../components/ui/AppText';
+import { AppButton } from '../../../components/ui/AppButton';
 
-const RaceModalize = forwardRef(({
+export const RaceModalize = forwardRef(({
     race: { user, car, time },
     position: { position, withUpgrage },
     onPressBack,
@@ -66,8 +66,6 @@ const RaceModalize = forwardRef(({
         </Modalize>
     );
 });
-
-export default RaceModalize;
 
 const styles = StyleSheet.create({
     wrap: {

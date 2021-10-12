@@ -16,7 +16,7 @@ const initialState = {
     finishTime: null,
 };
 
-export const raceReducer = (state = initialState, action) => {
+export const reducer = (state = initialState, action) => {
     switch (action.type) {
     case SET_TRAFFIC_LIGHT_VISIBILITY:
         return {

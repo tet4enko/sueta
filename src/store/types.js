@@ -3,11 +3,5 @@ export const GET_LOCATION_SUCCESS = 'location/GET_LOCATION_SUCCESS';
 export const GET_LOCATION_ERROR = 'location/GET_LOCATION_ERROR';
 export const UPDATE_LOCATION = 'location/UPDATE_LOCATION';
 
-export const SET_TRAFFIC_LIGHT_VISIBILITY = 'race/SET_TRAFFIC_LIGHT_VISIBILITY';
-export const SET_TRAFFIC_LIGHT_COLOR = 'race/SET_TRAFFIC_LIGHT_COLOR';
-export const SET_START_TIME = 'race/SET_START_TIME';
-export const SET_FINISH_TIME = 'race/SET_FINISH_TIME';
-export const SET_CURRENT_RACE_CARD = 'race/SET_SHOW_CURRENT_RACE_CARD';
-
 export const SET_USER_DATA = 'user/SET_USER_DATA';
 export const SET_CURRENT_USER = 'user/SET_CURRENT_USER';

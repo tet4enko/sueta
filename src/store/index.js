@@ -4,7 +4,7 @@ import thunk from 'redux-thunk';
 import { locationReducer } from './reducers/location';
 import { eventReducer } from '../entities/event/store';
 import { eventsReducer } from '../entities/events/store';
-import { raceReducer } from './reducers/race';
+import { raceReducer } from '../entities/race/store';
 import { userReducer } from './reducers/user';
 
 const rootReducer = combineReducers({

@@ -3,9 +3,9 @@ import {
     Animated, StyleSheet, Image, Dimensions,
 } from 'react-native';
 
-const red = require('../../assets/red.png');
-const yellow = require('../../assets/yellow.png');
-const green = require('../../assets/green.png');
+const red = require('../../../../assets/red.png');
+const yellow = require('../../../../assets/yellow.png');
+const green = require('../../../../assets/green.png');
 
 const pics = {
     red,
@@ -13,7 +13,7 @@ const pics = {
     green,
 };
 
-const TrafficLight = ({ color, style }) => (
+export const TrafficLight = ({ color, style }) => (
     <Animated.View style={{ ...styles.wrap, ...style }}>
         <Image
             source={pics[color]}
@@ -22,8 +22,6 @@ const TrafficLight = ({ color, style }) => (
         />
     </Animated.View>
 );
-
-export default TrafficLight;
 
 const styles = StyleSheet.create({
     wrap: {

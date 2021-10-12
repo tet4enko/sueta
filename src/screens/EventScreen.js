@@ -11,26 +11,18 @@ import InsetShadow from 'react-native-inset-shadow';
 
 import Stopwatch from '../components/ui/Stopwatch';
 import NavigateButton from '../components/NavigateButton';
+
+import { RaceModalize, TrafficLight } from '../entities/race/components';
 // import { EventMarkers } from '../entities/map/components';
-import RaceModalize from '../components/RaceModalize';
 import {
     getLocation,
-    getTrafficLightVisibility,
-    getTrafficLightColor,
-    getStartTime,
-    getFinishTime,
-    getRaceCurrentRaceCard,
 } from '../store/selectors';
 
 import { eventSelectors } from '../entities/event/store';
-
-import {
-    startRace, hideTrafficLight, resetRace, checkIsFinish,
-} from '../store/actions/race';
+import { raceSelectors, raceActions } from '../entities/race/store';
 
 import CancelButton from '../components/CancelButton';
 import StartButton from '../components/StartButton';
-import TrafficLight from '../components/TrafficLight';
 import { Finish } from '../components/ui/Finish';
 
 const buttonsWidth = Dimensions.get('window').width - 150;
@@ -40,17 +32,17 @@ const EventScreen = ({ navigation }) => {
     const { colors } = useTheme();
     const { location } = useSelector(getLocation);
     const eventMeta = useSelector(eventSelectors.getCurrentEventMeta);
-    const isTrafficLightVisible = useSelector(getTrafficLightVisibility);
-    const trafficLightColor = useSelector(getTrafficLightColor);
-    const startTime = useSelector(getStartTime);
-    const finishTime = useSelector(getFinishTime);
-    const raceCard = useSelector(getRaceCurrentRaceCard);
+    const isTrafficLightVisible = useSelector(raceSelectors.getTrafficLightVisibility);
+    const trafficLightColor = useSelector(raceSelectors.getTrafficLightColor);
+    const startTime = useSelector(raceSelectors.getStartTime);
+    const finishTime = useSelector(raceSelectors.getFinishTime);
+    const raceCard = useSelector(raceSelectors.getRaceCurrentRaceCard);
 
     const modalizeRef = useRef(null);
 
     const handleOnStartButtonPress = useCallback(() => {
-        dispatch(startRace());
-    }, [startRace]);
+        dispatch(raceActions.startRace());
+    }, [raceActions.startRace]);
 
     const trafficLightOpacity = useRef(new Animated.Value(1)).current;
     const startTrafficLightHide = () => {
@@ -62,7 +54,7 @@ const EventScreen = ({ navigation }) => {
                 useNativeDriver: true,
             },
         ).start(() => {
-            dispatch(hideTrafficLight());
+            dispatch(raceActions.hideTrafficLight());
         });
     };
 
@@ -85,7 +77,7 @@ const EventScreen = ({ navigation }) => {
         }
 
         dispatch(
-            checkIsFinish(
+            raceActions.checkIsFinish(
                 location.latitude,
                 location.longitude,
                 eventMeta.finishLatitude,
@@ -151,7 +143,7 @@ const EventScreen = ({ navigation }) => {
                             alertOkText="Да"
                             onPress={() => {
                                 navigation.goBack();
-                                dispatch(resetRace());
+                                dispatch(raceActions.resetRace());
                             }}
                         />
                     </View>
@@ -200,7 +192,7 @@ const EventScreen = ({ navigation }) => {
                         onPressBack={() => {
                             modalizeRef.current?.close();
                             navigation.goBack();
-                            dispatch(resetRace());
+                            dispatch(raceActions.resetRace());
                         }}
                     />
                 )}

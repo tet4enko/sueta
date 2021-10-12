@@ -6,9 +6,9 @@ import {
     SET_CURRENT_RACE_CARD,
 } from '../types';
 
-import { calcCrow } from '../../helpers/location';
-import { LOCATION_RADIUS } from '../../constants';
-import { addRace, getUserEventStat } from '../../helpers/firebase';
+import { calcCrow } from '../../../../helpers/location';
+import { LOCATION_RADIUS } from '../../../../constants';
+import { addRace, getUserEventStat } from '../../../../helpers/firebase';
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
