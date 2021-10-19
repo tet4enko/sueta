@@ -5,12 +5,10 @@ import {
     TouchableNativeFeedback,
 } from 'react-native';
 
-const Touchable = ({ children, onPress }) => {
+export const Touchable = ({ children, onPress }) => {
     const Wrapper = Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity;
 
     return (
         <Wrapper activeOpacity={0.7} onPress={onPress}>{children}</Wrapper>
     );
 };
-
-export default Touchable;

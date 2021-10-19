@@ -10,9 +10,9 @@ import { AppText } from './ui/AppText';
 
 import { calcCrow } from '../../helpers/location';
 
-import { LOCATION_RADIUS } from '../../constants';
+import { constants } from '../lib/constants';
 
-const StartButton = ({
+export const StartButton = ({
     style,
     onPress,
     startText = 'Перейти в событие!',
@@ -24,7 +24,7 @@ const StartButton = ({
     const [distance, setDistance] = useState(
         calcCrow(userLatitude, userLongitude, eventLatitude, eventLongitude),
     );
-    const [isDisabled, setIsDisabled] = useState(distance > LOCATION_RADIUS);
+    const [isDisabled, setIsDisabled] = useState(distance > constants.LOCATION_RADIUS);
 
     useEffect(() => {
         setDistance(calcCrow(userLatitude, userLongitude, eventLatitude, eventLongitude));
@@ -36,7 +36,7 @@ const StartButton = ({
     ]);
 
     useEffect(() => {
-        setIsDisabled(distance > LOCATION_RADIUS);
+        setIsDisabled(distance > constants.LOCATION_RADIUS);
     }, [distance]);
 
     const text = isDisabled ? `До старта ~ ${distance.toFixed(3) * 1000} м.` : startText;
@@ -50,8 +50,6 @@ const StartButton = ({
         </View>
     );
 };
-
-export default StartButton;
 
 const styles = StyleSheet.create({
     buttonText: {

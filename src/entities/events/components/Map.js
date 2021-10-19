@@ -7,7 +7,7 @@ import { eventSelectors } from '../../event/store';
 
 import { Markers } from './Markers';
 import { Route } from './Route';
-import { SharedMap } from '../../../shared/components';
+import { SharedComponents } from '../../../shared';
 
 export const Map = ({
     initialRegion,
@@ -19,7 +19,7 @@ export const Map = ({
     const { events } = useSelector(eventsSelectors.getEvents);
     const event = useSelector(eventSelectors.getCurrentEventMeta);
     return (
-        <SharedMap
+        <SharedComponents.Map
             initialRegion={initialRegion}
             onUserLocationChange={onUserLocationChange}
             ref={mapRef}
@@ -43,6 +43,6 @@ export const Map = ({
                     }}
                 />
             )}
-        </SharedMap>
+        </SharedComponents.Map>
     );
 };

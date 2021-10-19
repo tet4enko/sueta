@@ -7,16 +7,16 @@ import {
     View, StyleSheet, ActivityIndicator,
 } from 'react-native';
 
-import THEME from '../theme';
-import { EventsMap } from '../entities/events/components';
-import { EventCard } from '../entities/event/components';
-import { loadLocation, updateLocation } from '../store/actions/location';
-import { getLocation } from '../store/selectors';
-import { eventsSelectors, eventsActions } from '../entities/events/store';
-import { eventSelectors, eventActions } from '../entities/event/store';
-import { calculateInitialRegion } from '../helpers/location';
+import { SharedLib } from '../../shared';
+import { EventsMap } from '../../entities/events/components';
+import { EventCard } from '../../entities/event/components';
+import { loadLocation, updateLocation } from '../../store/actions/location';
+import { getLocation } from '../../store/selectors';
+import { eventsSelectors, eventsActions } from '../../entities/events/store';
+import { eventSelectors, eventActions } from '../../entities/event/store';
+import { calculateInitialRegion } from '../../helpers/location';
 
-const EventsScreen = ({ navigation }) => {
+export const screen = ({ navigation }) => {
     const dispatch = useDispatch();
     const {
         location,
@@ -75,7 +75,7 @@ const EventsScreen = ({ navigation }) => {
     if (isLocationLoading || isEventsLoading || !initialRegion) {
         return (
             <View style={styles.center}>
-                <ActivityIndicator size="large" color={THEME.MAIN_COLOR} />
+                <ActivityIndicator size="large" color={SharedLib.theme.MAIN_COLOR} />
             </View>
         );
     }
@@ -101,8 +101,6 @@ const EventsScreen = ({ navigation }) => {
         )
     );
 };
-
-export default EventsScreen;
 
 const styles = StyleSheet.create({
     center: {

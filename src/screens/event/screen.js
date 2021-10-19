@@ -9,25 +9,20 @@ import MapView from 'react-native-maps';
 import { useTheme } from '@react-navigation/native';
 import InsetShadow from 'react-native-inset-shadow';
 
-import Stopwatch from '../shared/components/ui/Stopwatch';
-import NavigateButton from '../shared/components/NavigateButton';
-
-import { RaceModalize, TrafficLight } from '../entities/race/components';
+import { RaceModalize, TrafficLight } from '../../entities/race/components';
 // import { EventMarkers } from '../entities/map/components';
 import {
     getLocation,
-} from '../store/selectors';
+} from '../../store/selectors';
 
-import { eventSelectors } from '../entities/event/store';
-import { raceSelectors, raceActions } from '../entities/race/store';
+import { eventSelectors } from '../../entities/event/store';
+import { raceSelectors, raceActions } from '../../entities/race/store';
 
-import CancelButton from '../shared/components/CancelButton';
-import StartButton from '../shared/components/StartButton';
-import { Finish } from '../shared/components/ui/Finish';
+import { SharedComponents } from '../../shared';
 
 const buttonsWidth = Dimensions.get('window').width - 150;
 
-const EventScreen = ({ navigation }) => {
+export const screen = ({ navigation }) => {
     const dispatch = useDispatch();
     const { colors } = useTheme();
     const { location } = useSelector(getLocation);
@@ -135,7 +130,7 @@ const EventScreen = ({ navigation }) => {
                 </MapView>
                 {!finishTime && (
                     <View style={{ ...styles.button, ...styles.cancelButton }}>
-                        <CancelButton
+                        <SharedComponents.CancelButton
                             buttonText="Покинуть событие"
                             alertTitle="Выход"
                             alertText="Вы точно хотите покинуть событие?"
@@ -151,13 +146,13 @@ const EventScreen = ({ navigation }) => {
                 {
                     finishTime && (
                         <View style={{ ...styles.finish, backgroundColor: colors.primary }}>
-                            <Finish />
+                            <SharedComponents.UI.Finish />
                         </View>
                     )
                 }
                 {!startTime && !finishTime && !raceCard && (
                     <View style={{ ...styles.button, ...styles.startButton }}>
-                        <StartButton
+                        <SharedComponents.StartButton
                             onPress={handleOnStartButtonPress}
                             startText="Начать заезд!"
                             eventLatitude={eventMeta.startLatitude}
@@ -169,7 +164,7 @@ const EventScreen = ({ navigation }) => {
                 )}
                 {!startTime && !finishTime && !raceCard && (
                     <View style={{ ...styles.button, ...styles.navigateButton }}>
-                        <NavigateButton
+                        <SharedComponents.NavigateButton
                             latitude={eventMeta.finishLatitude}
                             longitude={eventMeta.finishLongitude}
                             text="Маршрут до финиша"
@@ -178,7 +173,7 @@ const EventScreen = ({ navigation }) => {
                 )}
                 {startTime && (
                     <View style={styles.stopwatch}>
-                        <Stopwatch
+                        <SharedComponents.UI.StopWatch
                             msecs
                             start={Boolean(startTime && !finishTime)}
                         />
@@ -251,5 +246,3 @@ const styles = StyleSheet.create({
         borderRadius: 5,
     },
 });
-
-export default EventScreen;

@@ -1,11 +1,11 @@
 import * as Font from 'expo-font';
 // import * as Location from 'expo-location';
-import openBold from '../assets/fonts/OpenSans-Bold.ttf';
-import openRegular from '../assets/fonts/OpenSans-Regular.ttf';
-import robotoBold from '../assets/fonts/Roboto-Bold.ttf';
-import robotoRegular from '../assets/fonts/Roboto-Regular.ttf';
+import openBold from '../../../assets/fonts/OpenSans-Bold.ttf';
+import openRegular from '../../../assets/fonts/OpenSans-Regular.ttf';
+import robotoBold from '../../../assets/fonts/Roboto-Bold.ttf';
+import robotoRegular from '../../../assets/fonts/Roboto-Regular.ttf';
 
-export default async () => {
+export const Bootstrap = async () => {
     const results = await Promise.all([
         Font.loadAsync({
             'open-bold': openBold,

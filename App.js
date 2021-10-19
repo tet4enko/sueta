@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import AppLoading from 'expo-app-loading';
 import { Provider } from 'react-redux';
-import AppNavigation from './src/navigation/AppNavigation';
-import bootstrap from './src/bootstrap';
+import { AppComponents } from './src/app';
 import store from './src/store';
 
 export default function App() {
@@ -11,7 +10,7 @@ export default function App() {
     if (!isReady) {
         return (
             <AppLoading
-                startAsync={bootstrap}
+                startAsync={AppComponents.Bootstrap}
                 onFinish={() => setIsReady(true)}
                 onError={(err) => console.log(err)}
             />
@@ -20,7 +19,7 @@ export default function App() {
 
     return (
         <Provider store={store}>
-            <AppNavigation />
+            <AppComponents.Navigation />
         </Provider>
     );
 }

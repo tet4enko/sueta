@@ -7,7 +7,7 @@ import {
 } from '../types';
 
 import { calcCrow } from '../../../../helpers/location';
-import { LOCATION_RADIUS } from '../../../../constants';
+import { SharedLib } from '../../../../shared';
 import { addRace, getUserEventStat } from '../../../../helpers/firebase';
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -59,7 +59,7 @@ export const checkIsFinish = (
     eventId,
 ) => async (dispatch) => {
     const distance = calcCrow(latitude, longitude, finishLatitude, finishLongitude);
-    const isFinish = distance <= LOCATION_RADIUS;
+    const isFinish = distance <= SharedLib.constants.LOCATION_RADIUS;
 
     if (!isFinish) {
         return;

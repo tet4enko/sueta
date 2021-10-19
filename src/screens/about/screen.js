@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-const AboutScreen = () => (
+export const screen = () => (
     <View style={styles.center}>
         <Text>Это лучшее приложение для личных заметок.</Text>
         <Text>
@@ -11,8 +11,6 @@ const AboutScreen = () => (
         </Text>
     </View>
 );
-
-export default AboutScreen;
 
 const styles = StyleSheet.create({
     center: {

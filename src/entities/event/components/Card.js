@@ -12,11 +12,7 @@ import {
 } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { AntDesign, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
-import { AppTextBold } from '../../../shared/components/ui/AppTextBold';
-import { AppText } from '../../../shared/components/ui/AppText';
-import { AppButton } from '../../../shared/components/ui/AppButton';
-import NavigateButton from '../../../shared/components/NavigateButton';
-import StartButton from '../../../shared/components/StartButton';
+import { SharedComponents } from '../../../shared';
 
 import {
     getUserById,
@@ -24,8 +20,6 @@ import {
 } from '../../../store/selectors';
 
 import { eventSelectors } from '../store';
-
-import Touchable from '../../../shared/components/ui/Touchable';
 
 import { getUserProfile } from '../../../store/actions/user';
 
@@ -94,17 +88,21 @@ export const Card = forwardRef(({
         return (
             <View style={styles.wrap}>
                 <View style={styles.header}>
-                    <AppTextBold style={{ ...styles.name, color: colors.primary }}>{name}</AppTextBold>
+                    <SharedComponents.UI.AppTextBold style={{ ...styles.name, color: colors.primary }}>
+                        {name}
+                    </SharedComponents.UI.AppTextBold>
                     {navData && (
-                        <AppText style={{ ...styles.navigationData, color: colors.border }}>
+                        <SharedComponents.UI.AppText style={{ ...styles.navigationData, color: colors.border }}>
                             {`(${navData.distance.toFixed(1)} км)`}
-                        </AppText>
+                        </SharedComponents.UI.AppText>
                     )}
                 </View>
-                <AppText style={{ ...styles.description, color: colors.text }}>{description}</AppText>
+                <SharedComponents.UI.AppText style={{ ...styles.description, color: colors.text }}>
+                    {description}
+                </SharedComponents.UI.AppText>
                 {topThreeRaces ? (
                     <View style={styles.stats}>
-                        <Touchable onPress={handleOnPressTop2Race}>
+                        <SharedComponents.UI.Touchable onPress={handleOnPressTop2Race}>
                             <View style={styles.statsItem}>
                                 <Image
                                     style={{ ...styles.avatar, ...styles.second }}
@@ -113,13 +111,13 @@ export const Card = forwardRef(({
                                     }}
                                 />
                                 <View style={styles.statsItemText}>
-                                    <AppText style={styles.statsItemTextLabel}>
+                                    <SharedComponents.UI.AppText style={styles.statsItemTextLabel}>
                                         {topThreeRaces[1] ? `${topThreeRaces[1].time} сек` : '–'}
-                                    </AppText>
+                                    </SharedComponents.UI.AppText>
                                 </View>
                             </View>
-                        </Touchable>
-                        <Touchable onPress={handleOnPressTop1Race}>
+                        </SharedComponents.UI.Touchable>
+                        <SharedComponents.UI.Touchable onPress={handleOnPressTop1Race}>
                             <View style={styles.statsItem}>
                                 <Image
                                     style={{ ...styles.avatar, ...styles.first }}
@@ -128,13 +126,13 @@ export const Card = forwardRef(({
                                     }}
                                 />
                                 <View style={styles.statsItemText}>
-                                    <AppTextBold style={styles.statsItemTextLabel}>
+                                    <SharedComponents.UI.AppTextBold style={styles.statsItemTextLabel}>
                                         {topThreeRaces[0] ? `${topThreeRaces[0].time} сек` : '–'}
-                                    </AppTextBold>
+                                    </SharedComponents.UI.AppTextBold>
                                 </View>
                             </View>
-                        </Touchable>
-                        <Touchable onPress={handleOnPressTop3Race}>
+                        </SharedComponents.UI.Touchable>
+                        <SharedComponents.UI.Touchable onPress={handleOnPressTop3Race}>
                             <View style={styles.statsItem} onPress={handleOnPressTop3Race}>
                                 <Image
                                     style={{ ...styles.avatar, ...styles.third }}
@@ -143,19 +141,19 @@ export const Card = forwardRef(({
                                     }}
                                 />
                                 <View style={styles.statsItemText}>
-                                    <AppText style={styles.statsItemTextLabel}>
+                                    <SharedComponents.UI.AppText style={styles.statsItemTextLabel}>
                                         {topThreeRaces[2] ? `${topThreeRaces[2].time} сек` : '–'}
-                                    </AppText>
+                                    </SharedComponents.UI.AppText>
                                 </View>
                             </View>
-                        </Touchable>
+                        </SharedComponents.UI.Touchable>
                     </View>
                 ) : (
                     <View style={styles.stats}>
                         <ActivityIndicator size="small" color={colors.primary} />
                     </View>
                 )}
-                <StartButton
+                <SharedComponents.StartButton
                     style={styles.startButton}
                     onPress={onPressStart}
                     eventLatitude={meta.startLatitude}
@@ -167,27 +165,33 @@ export const Card = forwardRef(({
                     <View style={styles.statsItem}>
                         <MaterialCommunityIcons name="trophy-award" size={36} style={styles.statsItemPic} />
                         <View style={styles.statsItemText}>
-                            <AppText style={styles.statsItemTextLabel}>Позиция: </AppText>
-                            <AppTextBold>{userStats ? `${userStats.position}` : '-'}</AppTextBold>
+                            <SharedComponents.UI.AppText style={styles.statsItemTextLabel}>
+                                Позиция:
+                            </SharedComponents.UI.AppText>
+                            <SharedComponents.UI.AppTextBold>{userStats ? `${userStats.position}` : '-'}</SharedComponents.UI.AppTextBold>
                         </View>
                     </View>
                     <View style={styles.statsItem}>
-                        <AppText style={{ color: colors.border }}>|</AppText>
+                        <SharedComponents.UI.AppText style={{ color: colors.border }}>|</SharedComponents.UI.AppText>
                     </View>
                     <View style={styles.statsItem}>
                         <Ionicons name="stopwatch" size={36} style={styles.statsItemPic} />
                         <View style={styles.statsItemText}>
-                            <AppText style={styles.statsItemTextLabel}>Лучшее время: </AppText>
-                            <AppTextBold>{userStats ? `${userStats.time} сек` : '-'}</AppTextBold>
+                            <SharedComponents.UI.AppText style={styles.statsItemTextLabel}>
+                                Лучшее время:
+                            </SharedComponents.UI.AppText>
+                            <SharedComponents.UI.AppTextBold>{userStats ? `${userStats.time} сек` : '-'}</SharedComponents.UI.AppTextBold>
                         </View>
                     </View>
                 </View>
                 <View style={styles.bottomButtons}>
-                    <AppButton onPress={onPressBack} color="#fff">
+                    <SharedComponents.UI.AppButton onPress={onPressBack} color="#fff">
                         <AntDesign name="back" size={24} style={{ color: colors.border }} />
-                        <AppText style={{ ...styles.buttonText, color: colors.border }}>Назад</AppText>
-                    </AppButton>
-                    <NavigateButton
+                        <SharedComponents.UI.AppText style={{ ...styles.buttonText, color: colors.border }}>
+                            Назад
+                        </SharedComponents.UI.AppText>
+                    </SharedComponents.UI.AppButton>
+                    <SharedComponents.NavigateButton
                         latitude={startLatitude}
                         longitude={startLongitude}
                         text="Маршрут"

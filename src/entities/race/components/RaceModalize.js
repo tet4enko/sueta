@@ -11,9 +11,7 @@ import {
 
 import prettyMilliseconds from 'pretty-ms';
 
-import { AppTextBold } from '../../../shared/components/ui/AppTextBold';
-import { AppText } from '../../../shared/components/ui/AppText';
-import { AppButton } from '../../../shared/components/ui/AppButton';
+import { SharedComponents } from '../../../shared';
 
 export const RaceModalize = forwardRef(({
     race: { user, car, time },
@@ -29,38 +27,48 @@ export const RaceModalize = forwardRef(({
             withOverlay={false}
         >
             <View style={styles.wrap}>
-                <AppTextBold style={{ ...styles.title, color: colors.primary }}>Данные заезда</AppTextBold>
+                <SharedComponents.UI.AppTextBold style={{ ...styles.title, color: colors.primary }}>
+                    Данные заезда
+                </SharedComponents.UI.AppTextBold>
                 <View style={styles.item}>
                     <MaterialCommunityIcons name="racing-helmet" size={33} style={styles.itemIcon} />
-                    <AppTextBold style={styles.itemLabel}>Участник: </AppTextBold>
-                    <AppText style={styles.itemContent}>{user}</AppText>
+                    <SharedComponents.UI.AppTextBold style={styles.itemLabel}>
+                        Участник:
+                    </SharedComponents.UI.AppTextBold>
+                    <SharedComponents.UI.AppText style={styles.itemContent}>
+                        {user}
+                    </SharedComponents.UI.AppText>
                 </View>
                 <View style={styles.item}>
                     <Ionicons name="stopwatch" size={33} style={styles.itemIcon} />
-                    <AppTextBold style={styles.itemLabel}>Время: </AppTextBold>
-                    <AppText style={styles.itemContent}>{prettyMilliseconds(time)}</AppText>
+                    <SharedComponents.UI.AppTextBold style={styles.itemLabel}>Время: </SharedComponents.UI.AppTextBold>
+                    <SharedComponents.UI.AppText style={styles.itemContent}>
+                        {prettyMilliseconds(time)}
+                    </SharedComponents.UI.AppText>
                 </View>
                 <View style={styles.item}>
                     <MaterialIcons name="grade" size={33} style={styles.itemIcon} />
-                    <AppTextBold style={styles.itemLabel}>Позиция: </AppTextBold>
-                    <AppText style={styles.itemContent}>
+                    <SharedComponents.UI.AppTextBold style={styles.itemLabel}>
+                        Позиция:
+                    </SharedComponents.UI.AppTextBold>
+                    <SharedComponents.UI.AppText style={styles.itemContent}>
                         {position}
                         {position === 1 ? ' 👑' : ''}
-                    </AppText>
+                    </SharedComponents.UI.AppText>
                     {withUpgrage && (
                         <AntDesign name="arrowup" size={24} style={styles.upgradeIcon} />
                     )}
                 </View>
                 <View style={styles.item}>
                     <Ionicons name="car-sport" size={33} style={styles.itemIcon} />
-                    <AppTextBold style={styles.itemLabel}>Машина: </AppTextBold>
-                    <AppText style={styles.itemContent}>{car}</AppText>
+                    <SharedComponents.UI.AppTextBold style={styles.itemLabel}>Машина: </SharedComponents.UI.AppTextBold>
+                    <SharedComponents.UI.AppText style={styles.itemContent}>{car}</SharedComponents.UI.AppText>
                 </View>
                 <View style={styles.okButtonWrapper}>
-                    <AppButton onPress={onPressBack}>
+                    <SharedComponents.UI.AppButton onPress={onPressBack}>
                         <AntDesign name="check" size={32} style={{ color: '#fff' }} />
-                        <AppText style={{ ...styles.buttonText, color: '#fff' }}>OK </AppText>
-                    </AppButton>
+                        <SharedComponents.UI.AppText style={{ ...styles.buttonText, color: '#fff' }}>OK </SharedComponents.UI.AppText>
+                    </SharedComponents.UI.AppButton>
                 </View>
             </View>
         </Modalize>

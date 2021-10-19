@@ -6,16 +6,13 @@ import { useSelector } from 'react-redux';
 import { MaterialCommunityIcons, Entypo } from '@expo/vector-icons';
 import { useTheme } from '@react-navigation/native';
 
-import { AppText } from '../shared/components/ui/AppText';
-import { AppTextBold } from '../shared/components/ui/AppTextBold';
+import { SharedComponents } from '../../shared';
 
-import { getUserById, getCurrentUser } from '../store/selectors';
-
-import Touchable from '../shared/components/ui/Touchable';
+import { getUserById, getCurrentUser } from '../../store/selectors';
 
 const AVATAR_SIZE = 145;
 
-const ProfileScreen = () => {
+export const screen = () => {
     const { colors } = useTheme();
     const currentUser = useSelector(getCurrentUser);
     const currentUserData = useSelector(getUserById(currentUser));
@@ -29,30 +26,30 @@ const ProfileScreen = () => {
             {currentUserData ? (
                 <View style={styles.profile}>
                     <Entypo name="instagram" size={AVATAR_SIZE} />
-                    <Touchable onPress={handleLoginPress}>
-                        <AppTextBold style={{ ...styles.profileTextTitle }}>
+                    <SharedComponents.UI.Touchable onPress={handleLoginPress}>
+                        <SharedComponents.UI.AppTextBold style={{ ...styles.profileTextTitle }}>
                             {`@${currentUserData.username}`}
-                        </AppTextBold>
-                    </Touchable>
+                        </SharedComponents.UI.AppTextBold>
+                    </SharedComponents.UI.Touchable>
                 </View>
             ) : (
                 <View style={styles.anonymus}>
                     <MaterialCommunityIcons name="racing-helmet" size={AVATAR_SIZE} color={colors.primary} />
-                    <AppTextBold style={styles.anonymusTextTitle}>Вы не авторизованы :(</AppTextBold>
-                    <AppText style={styles.anonymusText}>
+                    <SharedComponents.UI.AppTextBold style={styles.anonymusTextTitle}>
+                        Вы не авторизованы :(
+                    </SharedComponents.UI.AppTextBold>
+                    <SharedComponents.UI.AppText style={styles.anonymusText}>
                         Это необходимо, чтобы Вы могли соревноваться с другими участниками,
                         и Ваши результаты сохранялись в системе.
-                    </AppText>
-                    <AppText style={styles.anonymusText}>
+                    </SharedComponents.UI.AppText>
+                    <SharedComponents.UI.AppText style={styles.anonymusText}>
                         Для этого, нажмите на иконку в правом верхнем углу ☝
-                    </AppText>
+                    </SharedComponents.UI.AppText>
                 </View>
             )}
         </View>
     );
 };
-
-export default ProfileScreen;
 
 const styles = StyleSheet.create({
     center: {

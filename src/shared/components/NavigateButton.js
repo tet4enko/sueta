@@ -12,7 +12,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { AppButton } from './ui/AppButton';
 import { AppText } from './ui/AppText';
 
-const NavigateButton = ({
+export const NavigateButton = ({
     latitude, longitude, style, text = 'Построить маршрут до старта',
 }) => {
     const { colors } = useTheme();
@@ -53,8 +53,6 @@ const NavigateButton = ({
         </View>
     );
 };
-
-export default NavigateButton;
 
 const styles = StyleSheet.create({
     buttonText: {

@@ -4,14 +4,14 @@ import { NavigationContainer, DefaultTheme, getFocusedRouteNameFromRoute } from 
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import EventsScreen from '../screens/EventsScreen';
-import EventScreen from '../screens/EventScreen';
-import ProfileScreen from '../screens/ProfileScreen';
-import AboutScreen from '../screens/AboutScreen';
+import { EventsScreen } from '../../screens/events';
+import { EventScreen } from '../../screens/event';
+import { ProfileScreen } from '../../screens/profile';
+import { AboutScreen } from '../../screens/about';
 
-import Auth from '../components/Auth';
+import Auth from '../../components/Auth';
 
-import THEME from '../theme';
+import { SharedLib } from '../../shared';
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
@@ -20,8 +20,8 @@ const MyTheme = {
     ...DefaultTheme,
     colors: {
         ...DefaultTheme.colors,
-        primary: THEME.MAIN_COLOR,
-        border: THEME.GRAY,
+        primary: SharedLib.theme.MAIN_COLOR,
+        border: SharedLib.theme.GRAY,
     },
 };
 
@@ -54,16 +54,16 @@ const Events = () => (
     </Stack.Navigator>
 );
 
-export default () => (
+export const Navigation = () => (
     <NavigationContainer theme={MyTheme}>
         <Drawer.Navigator screenOptions={(({ navigation }) => ({
-            headerTintColor: Platform.OS === 'android' ? '#fff' : THEME.MAIN_COLOR,
-            headerStyle: { backgroundColor: Platform.OS === 'android' ? THEME.MAIN_COLOR : '#fff' },
+            headerTintColor: Platform.OS === 'android' ? '#fff' : SharedLib.theme.MAIN_COLOR,
+            headerStyle: { backgroundColor: Platform.OS === 'android' ? SharedLib.theme.MAIN_COLOR : '#fff' },
             headerRight: () => (
                 <Auth onAvatarClick={() => navigation.navigate('Profile')} />
             ),
             headerRightContainerStyle: { right: 15 },
-            drawerActiveTintColor: THEME.MAIN_COLOR,
+            drawerActiveTintColor: SharedLib.theme.MAIN_COLOR,
             drawerLabelStyle: {
                 fontFamily: 'open-bold',
                 width: '100%',

@@ -1,4 +1,4 @@
-export default {
+export const theme = {
     MAIN_COLOR: '#303f9f',
     DANGER_COLOR: '#d81b60',
     GRAY: 'gray',

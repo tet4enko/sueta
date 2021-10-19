@@ -7,7 +7,7 @@ import React, { Component } from 'react';
 import { View } from 'react-native';
 import { AppText } from './AppText';
 
-import THEME from '../../../theme';
+import { theme } from '../../lib/theme';
 
 const formatTimeString = (time, showMsecs) => {
     let msecs = time % 1000;
@@ -37,7 +37,7 @@ const formatTimeString = (time, showMsecs) => {
     return formatted;
 };
 
-class StopWatch extends Component {
+export class StopWatch extends Component {
     constructor(props) {
         super(props);
         const { startTime } = props;
@@ -56,7 +56,7 @@ class StopWatch extends Component {
         // const width = props.msecs ? 220 : 150;
         this.defaultStyles = {
             container: {
-                backgroundColor: THEME.MAIN_COLOR,
+                backgroundColor: theme.MAIN_COLOR,
                 padding: 5,
                 borderRadius: 5,
                 width: '100%',
@@ -156,5 +156,3 @@ class StopWatch extends Component {
         );
     }
 }
-
-export default StopWatch;

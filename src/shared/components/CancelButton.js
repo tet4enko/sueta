@@ -6,7 +6,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { AppButton } from './ui/AppButton';
 import { AppText } from './ui/AppText';
 
-const CancelButton = ({
+export const CancelButton = ({
     buttonText = 'Отмена',
     alertTitle,
     alertText,
@@ -43,5 +43,3 @@ const styles = StyleSheet.create({
         color: '#fff',
     },
 });
-
-export default CancelButton;
