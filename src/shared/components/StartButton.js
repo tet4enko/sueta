@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import {
     StyleSheet,
     View,
@@ -9,24 +8,32 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { AppButton } from './ui/AppButton';
 import { AppText } from './ui/AppText';
 
-import { getLocation } from '../store/selectors';
-import { eventSelectors } from '../entities/event/store';
-import { calcCrow } from '../helpers/location';
+import { calcCrow } from '../../helpers/location';
 
-import { LOCATION_RADIUS } from '../constants';
+import { LOCATION_RADIUS } from '../../constants';
 
-const StartButton = ({ style, onPress, startText = 'Перейти в событие!' }) => {
-    const { location } = useSelector(getLocation);
-    const eventMeta = useSelector(eventSelectors.getCurrentEventMeta);
-
+const StartButton = ({
+    style,
+    onPress,
+    startText = 'Перейти в событие!',
+    eventLatitude,
+    eventLongitude,
+    userLatitude,
+    userLongitude,
+}) => {
     const [distance, setDistance] = useState(
-        calcCrow(location.latitude, location.longitude, eventMeta.startLatitude, eventMeta.startLongitude),
+        calcCrow(userLatitude, userLongitude, eventLatitude, eventLongitude),
     );
     const [isDisabled, setIsDisabled] = useState(distance > LOCATION_RADIUS);
 
     useEffect(() => {
-        setDistance(calcCrow(location.latitude, location.longitude, eventMeta.startLatitude, eventMeta.startLongitude));
-    }, [location.latitude, location.longitude, eventMeta.startLatitude, eventMeta.startLongitude]);
+        setDistance(calcCrow(userLatitude, userLongitude, eventLatitude, eventLongitude));
+    }, [
+        eventLatitude,
+        eventLongitude,
+        userLatitude,
+        userLongitude,
+    ]);
 
     useEffect(() => {
         setIsDisabled(distance > LOCATION_RADIUS);

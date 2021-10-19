@@ -6,12 +6,12 @@ import { useSelector } from 'react-redux';
 import { MaterialCommunityIcons, Entypo } from '@expo/vector-icons';
 import { useTheme } from '@react-navigation/native';
 
-import { AppText } from '../components/ui/AppText';
-import { AppTextBold } from '../components/ui/AppTextBold';
+import { AppText } from '../shared/components/ui/AppText';
+import { AppTextBold } from '../shared/components/ui/AppTextBold';
 
 import { getUserById, getCurrentUser } from '../store/selectors';
 
-import Touchable from '../components/ui/Touchable';
+import Touchable from '../shared/components/ui/Touchable';
 
 const AVATAR_SIZE = 145;
 

@@ -11,9 +11,9 @@ import {
 
 import prettyMilliseconds from 'pretty-ms';
 
-import { AppTextBold } from '../../../components/ui/AppTextBold';
-import { AppText } from '../../../components/ui/AppText';
-import { AppButton } from '../../../components/ui/AppButton';
+import { AppTextBold } from '../../../shared/components/ui/AppTextBold';
+import { AppText } from '../../../shared/components/ui/AppText';
+import { AppButton } from '../../../shared/components/ui/AppButton';
 
 export const RaceModalize = forwardRef(({
     race: { user, car, time },

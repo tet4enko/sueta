@@ -7,7 +7,7 @@ import React, { Component } from 'react';
 import { View } from 'react-native';
 import { AppText } from './AppText';
 
-import THEME from '../../theme';
+import THEME from '../../../theme';
 
 const formatTimeString = (time, showMsecs) => {
     let msecs = time % 1000;

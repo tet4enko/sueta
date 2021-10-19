@@ -9,8 +9,8 @@ import MapView from 'react-native-maps';
 import { useTheme } from '@react-navigation/native';
 import InsetShadow from 'react-native-inset-shadow';
 
-import Stopwatch from '../components/ui/Stopwatch';
-import NavigateButton from '../components/NavigateButton';
+import Stopwatch from '../shared/components/ui/Stopwatch';
+import NavigateButton from '../shared/components/NavigateButton';
 
 import { RaceModalize, TrafficLight } from '../entities/race/components';
 // import { EventMarkers } from '../entities/map/components';
@@ -21,9 +21,9 @@ import {
 import { eventSelectors } from '../entities/event/store';
 import { raceSelectors, raceActions } from '../entities/race/store';
 
-import CancelButton from '../components/CancelButton';
-import StartButton from '../components/StartButton';
-import { Finish } from '../components/ui/Finish';
+import CancelButton from '../shared/components/CancelButton';
+import StartButton from '../shared/components/StartButton';
+import { Finish } from '../shared/components/ui/Finish';
 
 const buttonsWidth = Dimensions.get('window').width - 150;
 
@@ -160,6 +160,10 @@ const EventScreen = ({ navigation }) => {
                         <StartButton
                             onPress={handleOnStartButtonPress}
                             startText="Начать заезд!"
+                            eventLatitude={eventMeta.startLatitude}
+                            eventLongitude={eventMeta.startLongitude}
+                            userLatitude={location.latitude}
+                            userLongitude={location.longitude}
                         />
                     </View>
                 )}

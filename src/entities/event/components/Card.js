@@ -12,19 +12,20 @@ import {
 } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { AntDesign, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
-import { AppTextBold } from '../../../components/ui/AppTextBold';
-import { AppText } from '../../../components/ui/AppText';
-import { AppButton } from '../../../components/ui/AppButton';
-import NavigateButton from '../../../components/NavigateButton';
-import StartButton from '../../../components/StartButton';
+import { AppTextBold } from '../../../shared/components/ui/AppTextBold';
+import { AppText } from '../../../shared/components/ui/AppText';
+import { AppButton } from '../../../shared/components/ui/AppButton';
+import NavigateButton from '../../../shared/components/NavigateButton';
+import StartButton from '../../../shared/components/StartButton';
 
 import {
     getUserById,
+    getLocation,
 } from '../../../store/selectors';
 
 import { eventSelectors } from '../store';
 
-import Touchable from '../../../components/ui/Touchable';
+import Touchable from '../../../shared/components/ui/Touchable';
 
 import { getUserProfile } from '../../../store/actions/user';
 
@@ -37,6 +38,7 @@ export const Card = forwardRef(({
     const dispatch = useDispatch();
     const { colors } = useTheme();
 
+    const { location } = useSelector(getLocation);
     const meta = useSelector(eventSelectors.getCurrentEventMeta);
     const navData = useSelector(eventSelectors.getCurrentEventNavData);
     const topThreeRaces = useSelector(eventSelectors.getCurrentEventTopThreeRaces);
@@ -153,7 +155,14 @@ export const Card = forwardRef(({
                         <ActivityIndicator size="small" color={colors.primary} />
                     </View>
                 )}
-                <StartButton style={styles.startButton} onPress={onPressStart} />
+                <StartButton
+                    style={styles.startButton}
+                    onPress={onPressStart}
+                    eventLatitude={meta.startLatitude}
+                    eventLongitude={meta.startLongitude}
+                    userLatitude={location.latitude}
+                    userLongitude={location.longitude}
+                />
                 <View style={styles.stats}>
                     <View style={styles.statsItem}>
                         <MaterialCommunityIcons name="trophy-award" size={36} style={styles.statsItemPic} />
