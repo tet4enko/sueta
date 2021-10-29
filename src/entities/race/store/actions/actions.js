@@ -6,9 +6,7 @@ import {
     SET_CURRENT_RACE_CARD,
 } from '../types';
 
-import { calcCrow } from '../../../../helpers/location';
-import { SharedLib } from '../../../../shared';
-import { addRace, getUserEventStat } from '../../../../helpers/firebase';
+import { firebaseLib, locationLib, constantsLib } from '../../../../shared/lib';
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -58,8 +56,8 @@ export const checkIsFinish = (
     startTime,
     eventId,
 ) => async (dispatch) => {
-    const distance = calcCrow(latitude, longitude, finishLatitude, finishLongitude);
-    const isFinish = distance <= SharedLib.constants.LOCATION_RADIUS;
+    const distance = locationLib.calcCrow(latitude, longitude, finishLatitude, finishLongitude);
+    const isFinish = distance <= constantsLib.LOCATION_RADIUS;
 
     if (!isFinish) {
         return;
@@ -77,9 +75,9 @@ export const checkIsFinish = (
         user,
     };
 
-    const raceId = await addRace(eventId, raceData);
+    const raceId = await firebaseLib.addRace(eventId, raceData);
 
-    const positionData = await getUserEventStat(user, eventId, raceId);
+    const positionData = await firebaseLib.getUserEventStat(user, eventId, raceId);
 
     await sleep(3000);
 

@@ -17,17 +17,16 @@ import { useTheme } from '@react-navigation/native';
 
 import { Entypo, EvilIcons } from '@expo/vector-icons';
 
-import { setCurrentUser } from '../store/actions/user';
-import { getUserById } from '../store/selectors';
+import { userActions, userSelectors } from '../store';
 
-const Auth = ({ onAvatarClick }) => {
+export const Auth = ({ onAvatarClick }) => {
     const dispatch = useDispatch();
     const { colors } = useTheme();
     const Wrapper = Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity;
 
     const instagramLogin = useRef();
     const [igAuthData, setIgAuthData] = useState(null);
-    const userData = useSelector(getUserById(igAuthData ? igAuthData.user_id : null));
+    const userData = useSelector(userSelectors.getUserById(igAuthData ? igAuthData.user_id : null));
 
     const handleOnLoginSuccess = useCallback((data) => setIgAuthData(data), [setIgAuthData]);
 
@@ -37,7 +36,7 @@ const Auth = ({ onAvatarClick }) => {
 
     useEffect(() => {
         if (igAuthData) {
-            dispatch(setCurrentUser(String(igAuthData.user_id), igAuthData.access_token));
+            dispatch(userActions.setCurrentUser(String(igAuthData.user_id), igAuthData.access_token));
         }
     }, [igAuthData]);
 
@@ -65,5 +64,3 @@ const Auth = ({ onAvatarClick }) => {
         </View>
     );
 };
-
-export default Auth;

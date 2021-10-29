@@ -8,7 +8,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { AppButton } from './ui/AppButton';
 import { AppText } from './ui/AppText';
 
-import { calcCrow } from '../../helpers/location';
+import { calcCrow } from '../lib/location';
 
 import { constants } from '../lib/constants';
 

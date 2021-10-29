@@ -4,8 +4,7 @@ import {
     SET_CURRENT_USER,
 } from '../types';
 
-import { api } from '../../helpers/instagram';
-import { updateUserInfo, getUserInfo } from '../../helpers/firebase';
+import { instagramLib, firebaseLib } from '../../../../shared/lib';
 
 const isTried = [];
 
@@ -18,7 +17,7 @@ export const getUserProfile = (userId_) => async (dispatch) => {
 
     isTried.push(userId_);
 
-    const data = await getUserInfo(userId);
+    const data = await firebaseLib.getUserInfo(userId);
 
     if (!data) {
         return;
@@ -33,7 +32,7 @@ export const getUserProfile = (userId_) => async (dispatch) => {
 const getUserBasicInfo = async (userId_, token) => {
     const userId = String(userId_);
 
-    const data = await api(`/v11.0/${userId}?fields=id,username&access_token=${token}`);
+    const data = await instagramLib.api(`/v11.0/${userId}?fields=id,username&access_token=${token}`);
 
     return data;
 };
@@ -48,7 +47,7 @@ export const setCurrentUser = (id, token) => async (dispatch) => {
 
     const userDataToSave = { username: userBasicInfo.username };
 
-    updateUserInfo(id, userDataToSave);
+    firebaseLib.updateUserInfo(id, userDataToSave);
 
     dispatch({
         type: SET_USER_DATA,

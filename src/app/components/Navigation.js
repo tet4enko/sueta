@@ -9,9 +9,9 @@ import { EventScreen } from '../../screens/event';
 import { ProfileScreen } from '../../screens/profile';
 import { AboutScreen } from '../../screens/about';
 
-import Auth from '../../components/Auth';
+import { Auth } from '../../entities/user/components';
 
-import { SharedLib } from '../../shared';
+import { themeLib } from '../../shared/lib';
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
@@ -20,8 +20,8 @@ const MyTheme = {
     ...DefaultTheme,
     colors: {
         ...DefaultTheme.colors,
-        primary: SharedLib.theme.MAIN_COLOR,
-        border: SharedLib.theme.GRAY,
+        primary: themeLib.MAIN_COLOR,
+        border: themeLib.GRAY,
     },
 };
 
@@ -57,13 +57,13 @@ const Events = () => (
 export const Navigation = () => (
     <NavigationContainer theme={MyTheme}>
         <Drawer.Navigator screenOptions={(({ navigation }) => ({
-            headerTintColor: Platform.OS === 'android' ? '#fff' : SharedLib.theme.MAIN_COLOR,
-            headerStyle: { backgroundColor: Platform.OS === 'android' ? SharedLib.theme.MAIN_COLOR : '#fff' },
+            headerTintColor: Platform.OS === 'android' ? '#fff' : themeLib.MAIN_COLOR,
+            headerStyle: { backgroundColor: Platform.OS === 'android' ? themeLib.MAIN_COLOR : '#fff' },
             headerRight: () => (
                 <Auth onAvatarClick={() => navigation.navigate('Profile')} />
             ),
             headerRightContainerStyle: { right: 15 },
-            drawerActiveTintColor: SharedLib.theme.MAIN_COLOR,
+            drawerActiveTintColor: themeLib.MAIN_COLOR,
             drawerLabelStyle: {
                 fontFamily: 'open-bold',
                 width: '100%',

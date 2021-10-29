@@ -10,10 +10,10 @@ import { useTheme } from '@react-navigation/native';
 import InsetShadow from 'react-native-inset-shadow';
 
 import { RaceModalize, TrafficLight } from '../../entities/race/components';
-// import { EventMarkers } from '../entities/map/components';
+import { EventsMarkers } from '../../entities/events/components';
 import {
     getLocation,
-} from '../../store/selectors';
+} from '../../shared/store/selectors/location';
 
 import { eventSelectors } from '../../entities/event/store';
 import { raceSelectors, raceActions } from '../../entities/race/store';
@@ -126,7 +126,7 @@ export const screen = ({ navigation }) => {
         >
             <View style={styles.center}>
                 <MapView {...mapViewProps}>
-                    {/* <EventMarkers event={eventMeta} /> */}
+                    <EventsMarkers event={eventMeta} />
                 </MapView>
                 {!finishTime && (
                     <View style={{ ...styles.button, ...styles.cancelButton }}>

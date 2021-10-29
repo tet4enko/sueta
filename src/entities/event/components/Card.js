@@ -14,14 +14,10 @@ import { useTheme } from '@react-navigation/native';
 import { AntDesign, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import { SharedComponents } from '../../../shared';
 
-import {
-    getUserById,
-    getLocation,
-} from '../../../store/selectors';
+import { userSelectors, userActions } from '../../user/store';
+import { getLocation } from '../../../shared/store/selectors/location';
 
 import { eventSelectors } from '../store';
-
-import { getUserProfile } from '../../../store/actions/user';
 
 const noUserAvatar = 'https://img2.freepng.ru/20180412/owe/kisspng-female-silhouette-clip-art-user-avatar-5acfd8e84206c7.3975166315235709202705.jpg';
 
@@ -37,9 +33,9 @@ export const Card = forwardRef(({
     const navData = useSelector(eventSelectors.getCurrentEventNavData);
     const topThreeRaces = useSelector(eventSelectors.getCurrentEventTopThreeRaces);
     const userStats = useSelector(eventSelectors.getCurrentEventUserStats);
-    const top1User = useSelector(getUserById(topThreeRaces && topThreeRaces[0] && topThreeRaces[0].user));
-    const top2User = useSelector(getUserById(topThreeRaces && topThreeRaces[1] && topThreeRaces[1].user));
-    const top3User = useSelector(getUserById(topThreeRaces && topThreeRaces[2] && topThreeRaces[2].user));
+    const top1User = useSelector(userSelectors.getUserById(topThreeRaces && topThreeRaces[0] && topThreeRaces[0].user));
+    const top2User = useSelector(userSelectors.getUserById(topThreeRaces && topThreeRaces[1] && topThreeRaces[1].user));
+    const top3User = useSelector(userSelectors.getUserById(topThreeRaces && topThreeRaces[2] && topThreeRaces[2].user));
 
     useEffect(() => {
         if (!topThreeRaces) {
@@ -47,13 +43,13 @@ export const Card = forwardRef(({
         }
 
         if (topThreeRaces[0]) {
-            dispatch(getUserProfile(topThreeRaces[0].user));
+            dispatch(userActions.getUserProfile(topThreeRaces[0].user));
         }
         if (topThreeRaces[1]) {
-            dispatch(getUserProfile(topThreeRaces[1].user));
+            dispatch(userActions.getUserProfile(topThreeRaces[1].user));
         }
         if (topThreeRaces[2]) {
-            dispatch(getUserProfile(topThreeRaces[2].user));
+            dispatch(userActions.getUserProfile(topThreeRaces[2].user));
         }
     }, [topThreeRaces]);
 

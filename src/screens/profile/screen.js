@@ -8,14 +8,14 @@ import { useTheme } from '@react-navigation/native';
 
 import { SharedComponents } from '../../shared';
 
-import { getUserById, getCurrentUser } from '../../store/selectors';
+import { userSelectors } from '../../entities/user/store';
 
 const AVATAR_SIZE = 145;
 
 export const screen = () => {
     const { colors } = useTheme();
-    const currentUser = useSelector(getCurrentUser);
-    const currentUserData = useSelector(getUserById(currentUser));
+    const currentUser = useSelector(userSelectors.getCurrentUser);
+    const currentUserData = useSelector(userSelectors.getUserById(currentUser));
 
     const handleLoginPress = useCallback(() => Linking.openURL(
         `instagram://user?username=${currentUserData.username}`,

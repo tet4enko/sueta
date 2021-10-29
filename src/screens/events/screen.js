@@ -7,14 +7,13 @@ import {
     View, StyleSheet, ActivityIndicator,
 } from 'react-native';
 
-import { SharedLib } from '../../shared';
 import { EventsMap } from '../../entities/events/components';
 import { EventCard } from '../../entities/event/components';
-import { loadLocation, updateLocation } from '../../store/actions/location';
-import { getLocation } from '../../store/selectors';
+import { loadLocation, updateLocation } from '../../shared/store/actions/location';
+import { getLocation } from '../../shared/store/selectors/location';
 import { eventsSelectors, eventsActions } from '../../entities/events/store';
 import { eventSelectors, eventActions } from '../../entities/event/store';
-import { calculateInitialRegion } from '../../helpers/location';
+import { locationLib, themeLib } from '../../shared/lib';
 
 export const screen = ({ navigation }) => {
     const dispatch = useDispatch();
@@ -45,7 +44,7 @@ export const screen = ({ navigation }) => {
             return;
         }
 
-        setInitialRegion(calculateInitialRegion(location, events));
+        setInitialRegion(locationLib.calculateInitialRegion(location, events));
     }, [isLocationLoaded, isEventsLoaded]);
 
     useEffect(() => {
@@ -75,7 +74,7 @@ export const screen = ({ navigation }) => {
     if (isLocationLoading || isEventsLoading || !initialRegion) {
         return (
             <View style={styles.center}>
-                <ActivityIndicator size="large" color={SharedLib.theme.MAIN_COLOR} />
+                <ActivityIndicator size="large" color={themeLib.MAIN_COLOR} />
             </View>
         );
     }

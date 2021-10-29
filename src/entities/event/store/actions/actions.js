@@ -5,7 +5,7 @@ import {
     SET_EVENT_NAV_DATA,
 } from '../types';
 
-import { getEventRaces } from '../../../../helpers/firebase';
+import { firebaseLib } from '../../../../shared/lib';
 
 export const setEventNavData = (data) => async (dispatch) => {
     dispatch({ type: SET_EVENT_NAV_DATA, payload: data });
@@ -17,7 +17,7 @@ export const showEvent = (id) => async (dispatch) => {
         payload: { id },
     });
 
-    const eventRaces = await getEventRaces(id);
+    const eventRaces = await firebaseLib.getEventRaces(id);
 
     dispatch({
         type: SET_EVENT_RACES,

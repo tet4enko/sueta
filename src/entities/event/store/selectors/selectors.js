@@ -1,4 +1,4 @@
-import { calculateEventRegion } from '../../../../helpers/location';
+import { calculateEventRegion } from '../../../../shared/lib/location';
 
 export const getCurrentEventId = (state) => {
     if (!state.event.id) {

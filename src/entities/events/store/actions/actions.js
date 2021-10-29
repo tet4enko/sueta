@@ -3,12 +3,12 @@ import {
     GET_EVENTS_SUCCESS,
 } from '../types';
 
-import { getEvents } from '../../../../helpers/firebase';
+import { firebaseLib } from '../../../../shared/lib';
 
 export const loadEvents = () => async (dispatch) => {
     dispatch({ type: GET_EVENTS_START });
 
-    const events = await getEvents();
+    const events = await firebaseLib.getEvents();
 
     dispatch({
         type: GET_EVENTS_SUCCESS,

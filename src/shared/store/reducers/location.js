@@ -2,7 +2,7 @@ import {
     GET_LOCATION_START,
     GET_LOCATION_SUCCESS,
     UPDATE_LOCATION,
-} from '../types';
+} from '../types/location';
 
 const initialState = {
     location: null,

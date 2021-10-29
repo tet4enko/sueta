@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import AppLoading from 'expo-app-loading';
 import { Provider } from 'react-redux';
 import { AppComponents } from './src/app';
-import store from './src/store';
+import store from './src/app/store';
 
 export default function App() {
     const [isReady, setIsReady] = useState(false);

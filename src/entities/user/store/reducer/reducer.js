@@ -8,7 +8,7 @@ const initialState = {
     currentUserId: null,
 };
 
-export const userReducer = (state = initialState, action) => {
+export const reducer = (state = initialState, action) => {
     switch (action.type) {
     case SET_USER_DATA:
         return {
