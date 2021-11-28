@@ -1,2 +1,1 @@
-export const getUserById = (userId) => (state) => state.user.users[userId] || null;
-export const getCurrentUser = (state) => state.user.currentUserId;
+export const getCurrentUserId = (state) => state.user.id;

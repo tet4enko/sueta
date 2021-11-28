@@ -1,60 +1,36 @@
-import React, { useState, useEffect } from 'react';
-import {
-    StyleSheet,
-    View,
-} from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import React from 'react';
 
+import { useSelector } from 'react-redux';
 import { AppButton } from './ui/AppButton';
-import { AppText } from './ui/AppText';
+import { NavigateButton } from './NavigateButton';
 
-import { calcCrow } from '../lib/location';
+import {
+    getLocation,
+} from '../store/selectors/location';
 
-import { constants } from '../lib/constants';
+import { useIsOnLocation } from '../model/hooks';
 
 export const StartButton = ({
     style,
     onPress,
-    startText = 'Перейти в событие!',
+    startText = ' Перейти в событие ',
     eventLatitude,
     eventLongitude,
-    userLatitude,
-    userLongitude,
+    isAction,
 }) => {
-    const [distance, setDistance] = useState(
-        calcCrow(userLatitude, userLongitude, eventLatitude, eventLongitude),
-    );
-    const [isDisabled, setIsDisabled] = useState(distance > constants.LOCATION_RADIUS);
+    const { location } = useSelector(getLocation);
+    const isEnabled = useIsOnLocation(eventLatitude, eventLongitude, location.latitude, location.longitude);
 
-    useEffect(() => {
-        setDistance(calcCrow(userLatitude, userLongitude, eventLatitude, eventLongitude));
-    }, [
-        eventLatitude,
-        eventLongitude,
-        userLatitude,
-        userLongitude,
-    ]);
-
-    useEffect(() => {
-        setIsDisabled(distance > constants.LOCATION_RADIUS);
-    }, [distance]);
-
-    const text = isDisabled ? `До старта ~ ${distance.toFixed(3) * 1000} м.` : startText;
+    const text = isEnabled ? startText : ' Машрут до старта ';
 
     return (
-        <View style={{ ...style, opacity: isDisabled ? 0.5 : 1 }}>
-            <AppButton onPress={onPress} isDisabled={isDisabled}>
-                <MaterialCommunityIcons name="racing-helmet" size={24} color="#fff" />
-                <AppText style={styles.buttonText}>{text}</AppText>
-            </AppButton>
-        </View>
+        <>
+            {isEnabled && (
+                <AppButton style={style} onPress={onPress} text={` ${text} `} color={isAction ? '#ff0088' : 'white'} />
+            )}
+            {!isEnabled && (
+                <NavigateButton style={style} latitude={eventLatitude} longitude={eventLongitude} text={text} />
+            )}
+        </>
     );
 };
-
-const styles = StyleSheet.create({
-    buttonText: {
-        fontSize: 20,
-        paddingLeft: 10,
-        color: '#fff',
-    },
-});

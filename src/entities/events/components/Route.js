@@ -12,7 +12,7 @@ export const Route = ({
         destination={{ latitude: finishLatitude, longitude: finishLongitude }}
         apikey="AIzaSyBQjy78ZlFHuPdJFY9wiiNDhuJJlwNgmiQ"
         strokeWidth={3}
-        strokeColor="green"
+        strokeColor="#3dc73d"
         optimizeWaypoints
         onReady={onReady}
     />

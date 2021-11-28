@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 
 import { useSelector } from 'react-redux';
 
@@ -14,10 +14,16 @@ export const Map = ({
     onUserLocationChange,
     onEventPress,
     onEventNavDataReady,
+    bottomPadding = 520,
 }) => {
     const mapRef = useRef(null);
     const { events } = useSelector(eventsSelectors.getEvents);
     const event = useSelector(eventSelectors.getCurrentEventMeta);
+
+    useEffect(() => {
+        mapRef.current?.animateToRegion(initialRegion, 300);
+    }, [initialRegion]);
+
     return (
         <SharedComponents.Map
             initialRegion={initialRegion}
@@ -29,15 +35,19 @@ export const Map = ({
                 <Route
                     event={event}
                     onReady={(result) => {
-                        onEventNavDataReady({
-                            distance: result.distance,
-                            duration: result.duration,
-                        });
+                        if (onEventNavDataReady) {
+                            onEventNavDataReady({
+                                distance: result.distance,
+                                duration: result.duration,
+                            });
+                        }
 
                         mapRef.current?.fitToCoordinates(result.coordinates, {
                             edgePadding: {
-                                top: 70,
-                                bottom: 500,
+                                top: 90,
+                                bottom: bottomPadding,
+                                left: 50,
+                                right: 50,
                             },
                         });
                     }}

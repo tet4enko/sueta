@@ -7,6 +7,6 @@ export const AppTextBold = ({ style, children }) => (
 
 const styles = StyleSheet.create({
     default: {
-        fontFamily: 'roboto-bold',
+        fontFamily: 'nfs',
     },
 });

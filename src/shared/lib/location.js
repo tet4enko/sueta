@@ -1,6 +1,16 @@
 import * as Location from 'expo-location';
 import { Dimensions } from 'react-native';
 
+const getMidpoint = function(...args) {
+    // eslint-disable-next-line no-undef
+    const points = args[0];
+
+    return [
+        points.reduce((acc, cur) => acc + cur[0], 0) / points.length,
+        points.reduce((acc, cur) => acc + cur[1], 0) / points.length,
+    ];
+};
+
 export const getLocation = async () => {
     const { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== 'granted') {
@@ -30,25 +40,28 @@ export const calcCrow = (lat1, lon1, lat2, lon2) => {
 };
 
 export const calculateInitialRegion = (location, events) => {
-    const MAX_DISTANCE_TO_NEAREST_EVENT = 1000;
+    // eslint-disable-next-line max-len
+    const sortedEvents = events.sort((a, b) => calcCrow(a.startLatitude, a.startLongitude, location.latitude, location.longitude)
+        - calcCrow(b.startLatitude, b.startLongitude, location.latitude, location.longitude)).slice(0, 3);
+    const center = getMidpoint(sortedEvents.map((event) => [event.startLatitude, event.startLongitude]));
 
-    const nearestEventDistance = events.reduce(
-        (acc, cur) => Math.min(
-            acc, calcCrow(cur.startLatitude, cur.startLongitude, location.latitude, location.longitude),
-        ),
-        MAX_DISTANCE_TO_NEAREST_EVENT,
+    const mostRemotePoint = sortedEvents[sortedEvents.length - 1];
+    const distance = calcCrow(
+        mostRemotePoint.startLatitude,
+        mostRemotePoint.startLongitude,
+        center[0],
+        center[1],
     );
 
     return {
-        latitude: location.latitude,
-        longitude: location.longitude,
-        latitudeDelta: (nearestEventDistance / Dimensions.get('window').height) * 17,
-        longitudeDelta: (nearestEventDistance / Dimensions.get('window').width) * 17,
+        latitude: center[0],
+        longitude: center[1],
+        latitudeDelta: (distance / Dimensions.get('window').height) * 17,
+        longitudeDelta: (distance / Dimensions.get('window').width) * 17,
     };
 };
 
 export const calculateEventRegion = (event) => {
-    const getMidpoint = ([x1, y1], [x2, y2]) => [(x1 + x2) / 2, (y1 + y2) / 2];
     const [midpointLatitude, midpointLongitude] = getMidpoint(
         [event.startLatitude, event.startLongitude], [event.finishLatitude, event.finishLongitude],
     );

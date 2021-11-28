@@ -66,29 +66,26 @@ export const getUserEventStat = async (user, eventId, raceId) => new Promise((re
                     currentRaceTime = race.time;
                 }
 
-                if (!users[race.user] || users[race.user].time > race.time) {
-                    users[race.user] = race;
+                if (!users[race.userId] || users[race.userId].time > race.time) {
+                    users[race.userId] = race;
                 }
             });
 
             const races = Object.values(users).sort((a, b) => a.time - b.time);
             let userBestRaceTime = null;
             const position = races.findIndex((race) => {
-                const isUserRace = race.user === user;
+                const isUserRace = race.userId === user;
                 if (isUserRace) {
                     userBestRaceTime = race.time;
                 }
 
                 return isUserRace;
-            }) + 1;
+            });
 
-            if (position) {
-                result.position = position;
+            if (position !== -1) {
+                result.position = position + 1;
                 result.bestTime = userBestRaceTime;
-            }
-
-            if (raceId && currentRaceTime) {
-                result.withUpgrage = races[position - 1].time === currentRaceTime;
+                result.withUpgrage = userBestRaceTime === currentRaceTime;
             }
 
             resolve(result);
@@ -101,13 +98,171 @@ export const updateUserInfo = (id, info) => new Promise((resolve) => {
     });
 });
 
-export const getUserInfo = (id) => new Promise((resolve) => {
-    db.collection('users').doc(String(id)).get().then((doc) => {
-        if (doc.exists) {
-            resolve(doc.data());
-        } else {
-            console.warn(`No such user ${id}`);
-            resolve(null);
-        }
-    });
+export const updateUserUsername = (id, username) => new Promise((resolve) => {
+    const user = db.collection('users').doc(id);
+
+    user
+        .get()
+        .then((doc) => {
+            if (doc.exists) {
+                const userData = doc.data();
+
+                const updatedUserData = {
+                    ...userData,
+                    username,
+                };
+
+                user
+                    .set(updatedUserData)
+                    .then(() => { resolve(updatedUserData); });
+            } else {
+                const updatedUserData = { username, cars: [] };
+                user
+                    .set(updatedUserData)
+                    .then(() => { resolve(updatedUserData); });
+            }
+        });
+});
+
+export const downloadUsersData = async (ids) => new Promise((resolve) => {
+    db.collection('users').where(firebase.firestore.FieldPath.documentId(), 'in', ids)
+        .get()
+        .then(({ docs }) => {
+            const result = [];
+            docs.forEach((doc) => {
+                result.push({ id: doc.id, data: doc.data() });
+            });
+
+            resolve(result);
+        });
+});
+
+export const addCarToUser = (
+    userId,
+    carToAdd,
+) => new Promise((resolve) => {
+    const {
+        brand,
+        model,
+        generation,
+        configuration,
+    } = carToAdd;
+    const user = db.collection('users').doc(userId);
+
+    user
+        .get()
+        .then((doc) => {
+            if (doc.exists) {
+                const userData = doc.data();
+                const cars = (userData.cars || [])
+                    .map((car) => ({ ...car, isCurrent: false }));
+
+                cars.unshift({
+                    brand,
+                    model,
+                    generation,
+                    configuration,
+                    isCurrent: true,
+                });
+
+                const updatedUserData = {
+                    ...userData,
+                    cars,
+                };
+
+                user
+                    .set(updatedUserData)
+                    .then(() => { resolve(updatedUserData); });
+            }
+        });
+});
+
+export const removeCar = (
+    userId,
+    carToRemove,
+) => new Promise((resolve) => {
+    const {
+        brand, model, generation, configuration,
+    } = carToRemove;
+    const user = db.collection('users').doc(userId);
+
+    user
+        .get()
+        .then((doc) => {
+            if (doc.exists) {
+                const userData = doc.data();
+                let cars = userData.cars || [];
+
+                let isCurrent = false;
+                cars = cars.filter((car) => {
+                    const isCarToRemove = (
+                        car.brand === brand
+                        && car.model === model
+                        && car.generation === generation
+                        && car.configuration === configuration
+                    );
+
+                    if (isCarToRemove && car.isCurrent) {
+                        isCurrent = true;
+                    }
+
+                    return !isCarToRemove;
+                });
+
+                if (isCurrent && cars.length) {
+                    cars[0].isCurrent = true;
+                }
+
+                const updatedUserData = {
+                    ...userData,
+                    cars,
+                };
+
+                user
+                    .set(updatedUserData)
+                    .then(() => { resolve(updatedUserData); });
+            }
+        });
+});
+
+export const setCurrentCar = (
+    userId,
+    carToSet,
+) => new Promise((resolve) => {
+    const {
+        brand, model, generation, configuration,
+    } = carToSet;
+    const user = db.collection('users').doc(userId);
+
+    user
+        .get()
+        .then((doc) => {
+            if (doc.exists) {
+                const userData = doc.data();
+                let cars = userData.cars || [];
+
+                cars = cars.map((car) => {
+                    const isCarToSet = (
+                        car.brand === brand
+                        && car.model === model
+                        && car.generation === generation
+                        && car.configuration === configuration
+                    );
+
+                    return {
+                        ...car,
+                        isCurrent: !!isCarToSet,
+                    };
+                });
+
+                const updatedUserData = {
+                    ...userData,
+                    cars,
+                };
+
+                user
+                    .set(updatedUserData)
+                    .then(() => { resolve(updatedUserData); });
+            }
+        });
 });

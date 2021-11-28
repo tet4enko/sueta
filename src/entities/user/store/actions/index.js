@@ -1,9 +1,7 @@
 import {
-    getUserProfile,
-    setCurrentUser,
+    setUser,
 } from './actions';
 
 export const actions = {
-    getUserProfile,
-    setCurrentUser,
+    setUser,
 };

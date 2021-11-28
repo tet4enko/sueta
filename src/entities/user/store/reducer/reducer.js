@@ -1,27 +1,17 @@
 import {
-    SET_USER_DATA,
-    SET_CURRENT_USER,
+    SET_USER,
 } from '../types';
 
 const initialState = {
-    users: {},
-    currentUserId: null,
+    id: null,
 };
 
 export const reducer = (state = initialState, action) => {
     switch (action.type) {
-    case SET_USER_DATA:
+    case SET_USER:
         return {
             ...state,
-            users: {
-                ...state.users,
-                [action.payload.id]: action.payload.data,
-            },
-        };
-    case SET_CURRENT_USER:
-        return {
-            ...state,
-            currentUserId: action.payload,
+            id: action.payload,
         };
     default:
         return state;

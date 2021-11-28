@@ -2,12 +2,13 @@ import React from 'react';
 import { Marker, Callout } from 'react-native-maps';
 import { Image } from 'react-native';
 
-const MARKER_SIZE = 32;
+const MARKER_SIZE = 45;
 
 export const Markers = ({ event, events, onEventPress }) => (
     event ? (
         <>
             <Marker
+                title="Старт"
                 coordinate={{ latitude: event.startLatitude, longitude: event.startLongitude }}
             >
                 <Image
@@ -16,9 +17,9 @@ export const Markers = ({ event, events, onEventPress }) => (
                     style={{ width: MARKER_SIZE, height: MARKER_SIZE }}
                     resizeMode="contain"
                 />
-                <Callout tooltip />
             </Marker>
             <Marker
+                title="Финиш"
                 coordinate={{ latitude: event.finishLatitude, longitude: event.finishLongitude }}
             >
                 <Image
@@ -27,7 +28,6 @@ export const Markers = ({ event, events, onEventPress }) => (
                     style={{ width: MARKER_SIZE, height: MARKER_SIZE }}
                     resizeMode="contain"
                 />
-                <Callout tooltip />
             </Marker>
         </>
     ) : (
@@ -39,8 +39,8 @@ export const Markers = ({ event, events, onEventPress }) => (
             >
                 <Image
                 // eslint-disable-next-line global-require
-                    source={require('../../../../assets/start.png')}
-                    style={{ width: MARKER_SIZE, height: MARKER_SIZE }}
+                    source={require('../../../../assets/event.png')}
+                    style={{ width: MARKER_SIZE, height: 65 }}
                     resizeMode="contain"
                 />
                 <Callout tooltip />

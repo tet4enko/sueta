@@ -1,101 +1,117 @@
 import React, {
-    useCallback, useRef, useEffect, useMemo,
+    useCallback, useRef, useState, useEffect,
 } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-    View, StyleSheet, Dimensions, Animated,
+    View, StyleSheet,
 } from 'react-native';
-import MapView from 'react-native-maps';
-import { useTheme } from '@react-navigation/native';
-import InsetShadow from 'react-native-inset-shadow';
+import { useIsFocused } from '@react-navigation/native';
 
-import { RaceModalize, TrafficLight } from '../../entities/race/components';
-import { EventsMarkers } from '../../entities/events/components';
+import { useIsOnLocation } from '../../shared/model/hooks';
+
+import { EventsMap } from '../../entities/events/components';
 import {
     getLocation,
 } from '../../shared/store/selectors/location';
 
+import { userSelectors } from '../../entities/user/store';
 import { eventSelectors } from '../../entities/event/store';
+import { updateLocation } from '../../shared/store/actions/location';
 import { raceSelectors, raceActions } from '../../entities/race/store';
+import { getUser } from '../../shared/store/selectors/users';
+
+import { TrafficLightModal } from './TrafficLightModal';
+import { RaceProgressModal } from './RaceProgressModal';
 
 import { SharedComponents } from '../../shared';
 
-const buttonsWidth = Dimensions.get('window').width - 150;
-
 export const screen = ({ navigation }) => {
+    const isFocused = useIsFocused();
     const dispatch = useDispatch();
-    const { colors } = useTheme();
     const { location } = useSelector(getLocation);
     const eventMeta = useSelector(eventSelectors.getCurrentEventMeta);
+    const currentUserId = useSelector(userSelectors.getCurrentUserId);
+    const currentUserData = useSelector(getUser(currentUserId));
     const isTrafficLightVisible = useSelector(raceSelectors.getTrafficLightVisibility);
     const trafficLightColor = useSelector(raceSelectors.getTrafficLightColor);
+    const isResultsReady = useSelector(raceSelectors.getIsResultsReady);
+    const resultsData = useSelector(raceSelectors.getResultsData);
     const startTime = useSelector(raceSelectors.getStartTime);
     const finishTime = useSelector(raceSelectors.getFinishTime);
-    const raceCard = useSelector(raceSelectors.getRaceCurrentRaceCard);
+    const [isRaceProgressModalVisible, setIsRaceProgressModalVisible] = useState(false);
+    const isOnStart = useIsOnLocation(
+        eventMeta.startLatitude,
+        eventMeta.startLongitude,
+        location.latitude,
+        location.longitude,
+    );
 
-    const modalizeRef = useRef(null);
+    // Выходим из события, если до старта гонки уехали со стартовой точки
+    useEffect(() => {
+        if (!isOnStart && !startTime && !isTrafficLightVisible) {
+            handleExit();
+        }
+    }, [isOnStart]);
 
-    const handleOnStartButtonPress = useCallback(() => {
-        dispatch(raceActions.startRace());
+    const handleOnStartButtonPress = useCallback(async () => {
+        await dispatch(raceActions.startRace());
+        setTimeout(() => {
+            setIsRaceProgressModalVisible(true);
+        }, 300);
     }, [raceActions.startRace]);
 
-    const trafficLightOpacity = useRef(new Animated.Value(1)).current;
-    const startTrafficLightHide = () => {
-        Animated.timing(
-            trafficLightOpacity,
-            {
-                toValue: 0,
-                duration: 1000,
-                useNativeDriver: true,
-            },
-        ).start(() => {
-            dispatch(raceActions.hideTrafficLight());
-        });
-    };
+    // ФАЛЬСТАРТ
+    // useEffect(() => {
+    //     if (isTrafficLightVisible && trafficLightColor !== 'green' && location.speed) {
+    //         dispatch(resetRace());
+    //         Alert.alert('Фальстарт! Попробуйте еще раз!');
+    //     }
+    // }, [isTrafficLightVisible, trafficLightColor, location.speed]);
 
-    useEffect(() => {
-        if (trafficLightColor === 'green') {
-            setTimeout(startTrafficLightHide, 1000);
+    const handleOnUserLocationChange = useCallback(({ nativeEvent: { coordinate } }) => {
+        if (!isFocused) {
+            return;
         }
-    }, [trafficLightColor]);
 
-    useEffect(() => {
-        if (isTrafficLightVisible && trafficLightColor !== 'green' && location.speed) {
-            // dispatch(resetRace());
-            // Alert.alert('Фальстарт! Попробуйте еще раз!');
-        }
-    }, [isTrafficLightVisible, trafficLightColor, location.speed]);
-
-    useEffect(() => {
-        if (!startTime || finishTime) {
+        if (
+            location
+            && location.latitude === coordinate.latitude
+            && location.longitude === coordinate.longitude
+            && location.speed === coordinate.speed) {
             return;
         }
 
         dispatch(
-            raceActions.checkIsFinish(
-                location.latitude,
-                location.longitude,
-                eventMeta.finishLatitude,
-                eventMeta.finishLongitude,
-                startTime,
-                eventMeta.id,
+            updateLocation(
+                coordinate.latitude,
+                coordinate.longitude,
+                coordinate.speed,
             ),
         );
-    }, [
-        startTime,
-        finishTime,
-        location.latitude,
-        location.longitude,
-        eventMeta.finishLatitude,
-        eventMeta.finishLongitude,
-        eventMeta.id,
-    ]);
 
-    useEffect(() => {
-        if (raceCard) {
-            modalizeRef.current?.open();
+        if (startTime && !finishTime && location) {
+            dispatch(
+                raceActions.checkIsFinish(
+                    location.latitude,
+                    location.longitude,
+                    eventMeta.finishLatitude,
+                    eventMeta.finishLongitude,
+                    startTime,
+                    eventMeta.id,
+                    currentUserId,
+                    currentUserData,
+                ),
+            );
         }
-    }, [raceCard]);
+    }, [eventMeta, location, isFocused, startTime, finishTime]);
+
+    const handleExit = useCallback(
+        () => {
+            dispatch(raceActions.resetRace());
+            navigation.goBack();
+        },
+        [],
+    );
 
     const initialRegion = useRef({
         latitude: location.latitude,
@@ -104,99 +120,39 @@ export const screen = ({ navigation }) => {
         longitudeDelta: 0.0121,
     });
 
-    const mapViewProps = useMemo(() => {
-        const result = {
-            style: styles.map,
-            provider: 'google',
-            initialRegion: initialRegion.current,
-            showsUserLocation: true,
-            showsMyLocationButton: !startTime,
-            zoomEnabled: !startTime,
-            showsBuildings: false,
-        };
-
-        return result;
-    }, [styles, initialRegion, location, startTime]);
-
     return (
-        <InsetShadow
-            shadowRadius={10}
-            shadowOpacity={!isTrafficLightVisible && startTime ? 0.6 : 0}
-            shadowColor={colors.primary}
-        >
-            <View style={styles.center}>
-                <MapView {...mapViewProps}>
-                    <EventsMarkers event={eventMeta} />
-                </MapView>
-                {!finishTime && (
-                    <View style={{ ...styles.button, ...styles.cancelButton }}>
-                        <SharedComponents.CancelButton
-                            buttonText="Покинуть событие"
-                            alertTitle="Выход"
-                            alertText="Вы точно хотите покинуть событие?"
-                            alertCancelText="Отмена"
-                            alertOkText="Да"
-                            onPress={() => {
-                                navigation.goBack();
-                                dispatch(raceActions.resetRace());
-                            }}
-                        />
-                    </View>
-                )}
-                {
-                    finishTime && (
-                        <View style={{ ...styles.finish, backgroundColor: colors.primary }}>
-                            <SharedComponents.UI.Finish />
-                        </View>
-                    )
-                }
-                {!startTime && !finishTime && !raceCard && (
-                    <View style={{ ...styles.button, ...styles.startButton }}>
-                        <SharedComponents.StartButton
-                            onPress={handleOnStartButtonPress}
-                            startText="Начать заезд!"
-                            eventLatitude={eventMeta.startLatitude}
-                            eventLongitude={eventMeta.startLongitude}
-                            userLatitude={location.latitude}
-                            userLongitude={location.longitude}
-                        />
-                    </View>
-                )}
-                {!startTime && !finishTime && !raceCard && (
-                    <View style={{ ...styles.button, ...styles.navigateButton }}>
-                        <SharedComponents.NavigateButton
-                            latitude={eventMeta.finishLatitude}
-                            longitude={eventMeta.finishLongitude}
-                            text="Маршрут до финиша"
-                        />
-                    </View>
-                )}
-                {startTime && (
-                    <View style={styles.stopwatch}>
-                        <SharedComponents.UI.StopWatch
-                            msecs
-                            start={Boolean(startTime && !finishTime)}
-                        />
-                    </View>
-                )}
-                {isTrafficLightVisible && (
-                    <TrafficLight color={trafficLightColor} style={{ opacity: trafficLightOpacity }} />
-                )}
-                {raceCard && (
-                    <RaceModalize
-                        ref={modalizeRef}
-                        race={raceCard.raceData}
-                        position={raceCard.positionData}
-                        event={eventMeta}
-                        onPressBack={() => {
-                            modalizeRef.current?.close();
-                            navigation.goBack();
-                            dispatch(raceActions.resetRace());
-                        }}
-                    />
-                )}
+        <View style={styles.center}>
+            <EventsMap
+                initialRegion={initialRegion.current}
+                onUserLocationChange={handleOnUserLocationChange}
+                bottomPadding={180}
+            />
+            <View style={styles.buttons}>
+                <SharedComponents.StartButton
+                    onPress={handleOnStartButtonPress}
+                    startText="Cтарт"
+                    eventLatitude={eventMeta.startLatitude}
+                    eventLongitude={eventMeta.startLongitude}
+                    isAction
+                    style={styles.button}
+                />
+                <SharedComponents.NavigateButton
+                    latitude={eventMeta.finishLatitude}
+                    longitude={eventMeta.finishLongitude}
+                    text="Проложить маршрут"
+                    style={styles.button}
+                />
             </View>
-        </InsetShadow>
+            <TrafficLightModal isVisible={isTrafficLightVisible} color={trafficLightColor} />
+            <RaceProgressModal
+                isVisible={isRaceProgressModalVisible}
+                startTime={startTime}
+                finishTime={finishTime}
+                isResultsReady={isResultsReady}
+                resultsData={resultsData}
+                onExit={handleExit}
+            />
+        </View>
     );
 };
 
@@ -211,38 +167,16 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%',
     },
+    buttons: {
+        position: 'absolute',
+        bottom: 30,
+        width: '90%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     button: {
-        position: 'absolute',
-        width: buttonsWidth,
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 3,
-        },
-        shadowOpacity: 0.37,
-        shadowRadius: 4.65,
-
-        elevation: 6,
-    },
-    cancelButton: {
-        bottom: 40,
-    },
-    startButton: {
-        bottom: 160,
-    },
-    navigateButton: {
-        bottom: 100,
-    },
-    stopwatch: {
-        position: 'absolute',
-        top: 30,
-        width: buttonsWidth,
-    },
-    trafficLight: {},
-    finish: {
-        position: 'absolute',
-        paddingHorizontal: 25,
-        paddingVertical: 10,
-        borderRadius: 5,
+        width: 310,
+        marginVertical: 10,
     },
 });

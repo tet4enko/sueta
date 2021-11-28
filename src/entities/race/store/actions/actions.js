@@ -3,7 +3,8 @@ import {
     SET_TRAFFIC_LIGHT_COLOR,
     SET_START_TIME,
     SET_FINISH_TIME,
-    SET_CURRENT_RACE_CARD,
+    SET_RESULTS_DATA,
+    SET_IS_RESULTS_READY,
 } from '../types';
 
 import { firebaseLib, locationLib, constantsLib } from '../../../../shared/lib';
@@ -34,6 +35,10 @@ export const startRace = () => async (dispatch) => {
 
     dispatch({ type: SET_TRAFFIC_LIGHT_COLOR, payload: 'green' });
     dispatch({ type: SET_START_TIME, payload: new Date().valueOf() });
+
+    await sleep(2000);
+
+    dispatch({ type: SET_TRAFFIC_LIGHT_VISIBILITY, payload: false });
 };
 
 export const hideTrafficLight = () => async (dispatch) => {
@@ -45,7 +50,8 @@ export const resetRace = () => (dispatch) => {
     dispatch({ type: SET_TRAFFIC_LIGHT_COLOR, payload: 'red' });
     dispatch({ type: SET_TRAFFIC_LIGHT_VISIBILITY, payload: false });
     dispatch({ type: SET_START_TIME, payload: null });
-    dispatch({ type: SET_CURRENT_RACE_CARD, payload: null });
+    dispatch({ type: SET_FINISH_TIME, payload: null });
+    dispatch({ type: SET_RESULTS_DATA, payload: null });
 };
 
 export const checkIsFinish = (
@@ -55,6 +61,8 @@ export const checkIsFinish = (
     finishLongitude,
     startTime,
     eventId,
+    userId,
+    userData,
 ) => async (dispatch) => {
     const distance = locationLib.calcCrow(latitude, longitude, finishLatitude, finishLongitude);
     const isFinish = distance <= constantsLib.LOCATION_RADIUS;
@@ -67,27 +75,21 @@ export const checkIsFinish = (
 
     dispatch({ type: SET_FINISH_TIME, payload: finishTime });
 
-    const user = 'Stig';
+    if (!userId) {
+        dispatch({ type: SET_IS_RESULTS_READY, payload: true });
+        return;
+    }
 
     const raceData = {
-        car: 'Skoda на чипе',
+        car: (userData && userData.cars.find((car) => car.isCurrent)) || null,
         time: finishTime - startTime,
-        user,
+        userId,
+        eventId,
     };
 
     const raceId = await firebaseLib.addRace(eventId, raceData);
+    const stats = await firebaseLib.getUserEventStat(userId, eventId, raceId);
 
-    const positionData = await firebaseLib.getUserEventStat(user, eventId, raceId);
-
-    await sleep(3000);
-
-    dispatch({ type: SET_TRAFFIC_LIGHT_COLOR, payload: 'red' });
-    dispatch({ type: SET_TRAFFIC_LIGHT_VISIBILITY, payload: false });
-    dispatch({ type: SET_START_TIME, payload: null });
-    dispatch({ type: SET_FINISH_TIME, payload: null });
-
-    dispatch({
-        type: SET_CURRENT_RACE_CARD,
-        payload: { raceData, positionData },
-    });
+    dispatch({ type: SET_RESULTS_DATA, payload: stats });
+    dispatch({ type: SET_IS_RESULTS_READY, payload: true });
 };

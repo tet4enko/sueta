@@ -3,17 +3,19 @@ import {
     SET_TRAFFIC_LIGHT_COLOR,
     SET_START_TIME,
     SET_FINISH_TIME,
-    SET_CURRENT_RACE_CARD,
+    SET_RESULTS_DATA,
+    SET_IS_RESULTS_READY,
 } from '../types';
 
 const initialState = {
     ui: {
         isTrafficLightVisible: false,
         trafficLightColor: 'red',
-        raceCard: null,
+        isResultsReady: false,
     },
     startTime: null,
     finishTime: null,
+    resultsData: null,
 };
 
 export const reducer = (state = initialState, action) => {
@@ -34,6 +36,14 @@ export const reducer = (state = initialState, action) => {
                 trafficLightColor: action.payload,
             },
         };
+    case SET_IS_RESULTS_READY:
+        return {
+            ...state,
+            ui: {
+                ...state.ui,
+                isResultsReady: action.payload,
+            },
+        };
     case SET_START_TIME:
         return {
             ...state,
@@ -44,13 +54,10 @@ export const reducer = (state = initialState, action) => {
             ...state,
             finishTime: action.payload,
         };
-    case SET_CURRENT_RACE_CARD:
+    case SET_RESULTS_DATA:
         return {
             ...state,
-            ui: {
-                ...state.ui,
-                raceCard: action.payload,
-            },
+            resultsData: action.payload,
         };
     default:
         return state;

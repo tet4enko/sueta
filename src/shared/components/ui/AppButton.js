@@ -2,21 +2,35 @@ import React from 'react';
 import {
     StyleSheet,
     View,
-    TouchableOpacity,
-    TouchableNativeFeedback,
-    Platform,
 } from 'react-native';
-import { useTheme } from '@react-navigation/native';
+import { LinearGradient } from 'expo-linear-gradient';
+
+import { AppText } from './AppText';
+import { Touchable } from './Touchable';
 
 export const AppButton = ({
-    children, onPress, color, isDisabled,
+    children, onPress, isDisabled, text, style, color = 'white', gradientColors = ['#1d1f59', '#3f3185'],
 }) => {
-    const Wrapper = Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity;
-    const { colors } = useTheme();
-
     const content = (
-        <View style={{ ...styles.button, backgroundColor: color || colors.primary }}>
-            {children}
+        <View style={{ ...styles.button, ...style }}>
+            <LinearGradient
+                colors={gradientColors}
+                start={{
+                    x: 0,
+                    y: 0,
+                }}
+                end={{
+                    x: 1,
+                    y: 1,
+                }}
+                style={{ ...styles.box, borderColor: color }}
+            >
+                {text ? (
+                    <AppText style={{ ...styles.buttonText, color }}>
+                        {text}
+                    </AppText>
+                ) : children}
+            </LinearGradient>
         </View>
     );
 
@@ -25,22 +39,27 @@ export const AppButton = ({
     }
 
     return (
-        <Wrapper onPress={onPress} activeOpacity={0.7}>
+        <Touchable onPress={onPress} activeOpacity={0.7}>
             {content}
-        </Wrapper>
+        </Touchable>
     );
 };
 
 const styles = StyleSheet.create({
     button: {
-        paddingHorizontal: 20,
-        paddingVertical: 10,
-        borderRadius: 5,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
     },
-    text: {
-        color: '#fff',
+    box: {
+        width: '100%',
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        borderRadius: 10,
+        borderWidth: 2,
+    },
+    buttonText: {
+        fontSize: 20,
+        textAlign: 'center',
     },
 });

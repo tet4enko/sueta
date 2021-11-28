@@ -1,9 +1,9 @@
 import {
-    getUserById,
-    getCurrentUser,
+    getCurrentUserId,
+    getCurrentUserCars,
 } from './selectors';
 
 export const selectors = {
-    getUserById,
-    getCurrentUser,
+    getCurrentUserId,
+    getCurrentUserCars,
 };

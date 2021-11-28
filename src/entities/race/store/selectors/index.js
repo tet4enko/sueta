@@ -3,7 +3,8 @@ import {
     getTrafficLightVisibility,
     getStartTime,
     getFinishTime,
-    getRaceCurrentRaceCard,
+    getResultsData,
+    getIsResultsReady,
 } from './selectors';
 
 export const selectors = {
@@ -11,5 +12,6 @@ export const selectors = {
     getTrafficLightVisibility,
     getStartTime,
     getFinishTime,
-    getRaceCurrentRaceCard,
+    getResultsData,
+    getIsResultsReady,
 };

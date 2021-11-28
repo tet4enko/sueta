@@ -30,41 +30,16 @@ export const getCurrentEventRaces = (state) => {
 
     return state.event.races;
 };
-export const getCurrentEventTopThreeRaces = (state) => {
+export const getCurrentEventRating = (state) => {
     const { id, races } = state.event;
     if (!id || !races) {
         return null;
     }
 
-    return Object.values(
+    const list = Object.values(
         races.reduce((acc, race) => {
-            if (!acc[race.user] || acc[race.user].time > race.time) {
-                acc[race.user] = race;
-            }
-
-            return acc;
-        }, {}),
-    )
-        .sort((a, b) => a.time - b.time)
-        .slice(0, 3);
-};
-
-export const getCurrentEventUserStats = (state) => {
-    const { currentUserId } = state.user;
-
-    if (!currentUserId) {
-        return null;
-    }
-
-    const { id, races } = state.event;
-    if (!id || !races) {
-        return null;
-    }
-
-    const bestRaces = Object.values(
-        races.reduce((acc, race) => {
-            if (!acc[race.user] || acc[race.user].time > race.time) {
-                acc[race.user] = race;
+            if (!acc[race.userId] || acc[race.userId].time > race.time) {
+                acc[race.userId] = race;
             }
 
             return acc;
@@ -72,14 +47,10 @@ export const getCurrentEventUserStats = (state) => {
     )
         .sort((a, b) => a.time - b.time);
 
-    let time = null;
-    const position = bestRaces.findIndex((race) => {
-        const isCurrentUserRace = race.user === currentUserId;
-        if (isCurrentUserRace) {
-            time = race.time;
-        }
-        return isCurrentUserRace;
-    }) + 1;
+    const currentUserPosition = list.findIndex((race) => race.userId === state.user.id) + 1;
 
-    return { time, position };
+    return {
+        currentUserPosition,
+        list,
+    };
 };

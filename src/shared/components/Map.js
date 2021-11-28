@@ -2,6 +2,8 @@ import React, { forwardRef } from 'react';
 import MapView from 'react-native-maps';
 import { StyleSheet } from 'react-native';
 
+import mapJSON from '../configs/map.json';
+
 export const Map = forwardRef(({
     initialRegion,
     onUserLocationChange,
@@ -13,9 +15,10 @@ export const Map = forwardRef(({
         provider="google"
         initialRegion={initialRegion}
         showsUserLocation
-        showsMyLocationButton
+        showsMyLocationButton={false}
         showsIndoors={false}
         onUserLocationChange={onUserLocationChange}
+        customMapStyle={mapJSON}
     >
         {children}
     </MapView>

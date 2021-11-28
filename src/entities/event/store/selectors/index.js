@@ -3,8 +3,7 @@ import {
     getCurrentEventMeta,
     getCurrentEventNavData,
     getCurrentEventRaces,
-    getCurrentEventTopThreeRaces,
-    getCurrentEventUserStats,
+    getCurrentEventRating,
 } from './selectors';
 
 export const selectors = {
@@ -12,6 +11,5 @@ export const selectors = {
     getCurrentEventMeta,
     getCurrentEventNavData,
     getCurrentEventRaces,
-    getCurrentEventTopThreeRaces,
-    getCurrentEventUserStats,
+    getCurrentEventRating,
 };
